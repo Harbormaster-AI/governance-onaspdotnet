@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="governanceonaspdotnet/governanceonaspdotnet.Api.csproj" />
+  <Project Path="governanceonaspdotnet/Tests/governanceonaspdotnet.Tests.csproj" />
+</Solution>

@@ -1,0 +1,12 @@
+using governanceonaspdotnet.Domain;
+
+namespace governanceonaspdotnet.Persistence;
+
+public interface IRetentionScheduleRepository
+{
+    Task<RetentionSchedule?> GetByIdAsync(Guid id, CancellationToken cancellationToken);
+    Task<IReadOnlyList<RetentionSchedule>> GetAllAsync(CancellationToken cancellationToken);
+    Task AddAsync(RetentionSchedule retentionSchedule, CancellationToken cancellationToken);
+    Task UpdateAsync(RetentionSchedule retentionSchedule, CancellationToken cancellationToken);
+    Task DeleteAsync(RetentionSchedule retentionSchedule, CancellationToken cancellationToken);
+}

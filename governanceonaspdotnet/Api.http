@@ -1,0 +1,5 @@
+@governanceonaspdotnet.Api_HostAddress = http://localhost:5076
+
+GET {{governanceonaspdotnet.Api_HostAddress}}/
+Accept: application/json
+
