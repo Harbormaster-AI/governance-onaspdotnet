@@ -1,6 +1,8 @@
+
 using governanceonaspdotnet.Domain;
 using governanceonaspdotnet.Persistence;
 using governanceonaspdotnet.Contracts;
+using governanceonaspdotnet.Telemetry;
 
 namespace governanceonaspdotnet.Service;
 
@@ -11,7 +13,6 @@ public interface IPersonService {
     Task<Person?> Get(IdentifierRequest identifier, CancellationToken cancellationToken);
     Task<IReadOnlyList<Person>> GetAll(CancellationToken cancellationToken);
     Task<bool> Delete(IdentifierRequest identifier, CancellationToken cancellationToken);
-
     // ------------------------------
     // Single Associations
     // -------------------------------
@@ -27,26 +28,38 @@ public interface IPersonService {
 
 public class PersonService : IPersonService
 {
+    private readonly ApplicationTelemetry _telemetry;
     private readonly IPersonRepository _repository;
     private readonly ILogger<PersonService> _logger;
+    private readonly IServiceResolver _serviceResolver;
+
 
     public PersonService(
-        IPersonRepository repository, ILogger<PersonService> logger )
+        ApplicationTelemetry telemetry,
+        IPersonRepository repository,
+        ILogger<PersonService> logger,
+        IServiceResolver serviceResolver)
     {
+        _telemetry = telemetry;
         _repository = repository;
         _logger = logger;
+        _serviceResolver = serviceResolver;
     }
-
 
     public async Task Create(Person model, CancellationToken cancellationToken)
     {
         try
         {
-            await _repository.AddAsync(model, cancellationToken);
+            await _telemetry.Execute(
+                "Person",
+                "CreatePerson",
+                () => _repository.AddAsync(model, cancellationToken));
         }
         catch (Exception ex)
         {
-            _logger.LogError($"Unexpected Error: {ex.Message}");
+            _logger.LogError(
+                    ex,
+                    "Unexpected error while creating Transaction.");
         }
     }
 
@@ -63,11 +76,16 @@ public class PersonService : IPersonService
             existing.Email = model.Email;
             existing.Department = model.Department;
 
-            await _repository.UpdateAsync(existing, cancellationToken);
+            await _telemetry.Execute(
+                "Person",
+                "UpdatePerson",
+                () => _repository.UpdateAsync(existing, cancellationToken));
         }
         catch (Exception ex)
         {
-            _logger.LogError($"Unexpected Error: {ex.Message}");
+            _logger.LogError(
+                    ex,
+                    "Unexpected error while creating Transaction.");
             return false;
         }
         return true;
@@ -89,36 +107,121 @@ public class PersonService : IPersonService
 
         try
         {
-            await _repository.DeleteAsync(existing, cancellationToken);
+            await _telemetry.Execute(
+                "Person",
+                "UpdatePerson",
+                () => _repository.DeleteAsync(existing, cancellationToken));
         }
         catch (Exception ex)
         {
-            _logger.LogError($"Unexpected Error: {ex.Message}");
+            _logger.LogError(
+                    ex,
+                    "Unexpected error while creating Transaction.");
             return false;
         }
         return true;
-
     }
 
 
     public async Task<bool> AddToRoleAssignments(MultipleAssociationRequest request, CancellationToken cancellationToken) {
+        try {
+            await _telemetry.Execute(
+                "Person",
+                "AddToRoleAssignments",
+                () => _repository.AddToRoleAssignmentsAsync(request, cancellationToken));
+        }
+        catch (Exception ex)
+        {
+           _logger.LogError(
+                   ex,
+                   "Unexpected error while creating Transaction.");
+            return false;
+        }
         return true;
     }
+
     public async Task<bool> RemoveFromRoleAssignments(MultipleAssociationRequest request, CancellationToken cancellationToken) {
+        try {
+            await _telemetry.Execute(
+                "Person",
+                "RemoveFromRoleAssignments",
+                () => _repository.RemoveFromRoleAssignmentsAsync(request, cancellationToken));
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(
+                    ex,
+                    "Unexpected error while creating Transaction.");
+            return false;
+        }
         return true;
     }
 
     public async Task<bool> AddToOwnedPolicies(MultipleAssociationRequest request, CancellationToken cancellationToken) {
+        try {
+            await _telemetry.Execute(
+                "Person",
+                "AddToOwnedPolicies",
+                () => _repository.AddToOwnedPoliciesAsync(request, cancellationToken));
+        }
+        catch (Exception ex)
+        {
+           _logger.LogError(
+                   ex,
+                   "Unexpected error while creating Transaction.");
+            return false;
+        }
         return true;
     }
+
     public async Task<bool> RemoveFromOwnedPolicies(MultipleAssociationRequest request, CancellationToken cancellationToken) {
+        try {
+            await _telemetry.Execute(
+                "Person",
+                "RemoveFromOwnedPolicies",
+                () => _repository.RemoveFromOwnedPoliciesAsync(request, cancellationToken));
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(
+                    ex,
+                    "Unexpected error while creating Transaction.");
+            return false;
+        }
         return true;
     }
 
     public async Task<bool> AddToCorrectiveActions(MultipleAssociationRequest request, CancellationToken cancellationToken) {
+        try {
+            await _telemetry.Execute(
+                "Person",
+                "AddToCorrectiveActions",
+                () => _repository.AddToCorrectiveActionsAsync(request, cancellationToken));
+        }
+        catch (Exception ex)
+        {
+           _logger.LogError(
+                   ex,
+                   "Unexpected error while creating Transaction.");
+            return false;
+        }
         return true;
     }
+
     public async Task<bool> RemoveFromCorrectiveActions(MultipleAssociationRequest request, CancellationToken cancellationToken) {
+        try {
+            await _telemetry.Execute(
+                "Person",
+                "RemoveFromCorrectiveActions",
+                () => _repository.RemoveFromCorrectiveActionsAsync(request, cancellationToken));
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(
+                    ex,
+                    "Unexpected error while creating Transaction.");
+            return false;
+        }
         return true;
     }
 

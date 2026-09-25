@@ -1,4 +1,7 @@
+
+using governanceonaspdotnet.Contracts;
 using governanceonaspdotnet.Domain;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace governanceonaspdotnet.Persistence;
@@ -44,4 +47,41 @@ public class ProcedureRepository : IProcedureRepository
         _db.Procedures.Remove(procedure);
         await _db.SaveChangesAsync(cancellationToken);
     }
+
+
+    public async Task AddToControlsAsync(
+        MultipleAssociationRequest request,
+        CancellationToken cancellationToken)
+    {
+        await _db.Controls
+            .Where(control =>
+                request.ChildIds.Contains(control.Id))
+            .ExecuteUpdateAsync(setters =>
+                setters.SetProperty(
+                    control =>
+                        EF.Property<Guid?>(
+                            control,
+                            "DataBreach_Id"),
+                    request.ParentId));
+    }
+
+    public async Task RemoveFromControlsAsync(
+        MultipleAssociationRequest request,
+        CancellationToken cancellationToken)
+    {
+        await _db.Controls
+            .Where(control =>
+                request.ChildIds.Contains(control.Id) &&
+                EF.Property<Guid?>(
+                    control,
+                    "DataBreach_Id") == request.ParentId)
+            .ExecuteUpdateAsync(setters =>
+                setters.SetProperty(
+                    control =>
+                        EF.Property<Guid?>(
+                            control,
+                            "DataBreach_Id"),
+                    (Guid?)null));
+    }
+
 }

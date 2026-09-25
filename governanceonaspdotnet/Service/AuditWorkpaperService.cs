@@ -1,6 +1,8 @@
+
 using governanceonaspdotnet.Domain;
 using governanceonaspdotnet.Persistence;
 using governanceonaspdotnet.Contracts;
+using governanceonaspdotnet.Telemetry;
 
 namespace governanceonaspdotnet.Service;
 
@@ -11,7 +13,6 @@ public interface IAuditWorkpaperService {
     Task<AuditWorkpaper?> Get(IdentifierRequest identifier, CancellationToken cancellationToken);
     Task<IReadOnlyList<AuditWorkpaper>> GetAll(CancellationToken cancellationToken);
     Task<bool> Delete(IdentifierRequest identifier, CancellationToken cancellationToken);
-
     // ------------------------------
     // Single Associations
     // -------------------------------
@@ -27,27 +28,38 @@ public interface IAuditWorkpaperService {
 
 public class AuditWorkpaperService : IAuditWorkpaperService
 {
+    private readonly ApplicationTelemetry _telemetry;
     private readonly IAuditWorkpaperRepository _repository;
     private readonly ILogger<AuditWorkpaperService> _logger;
+    private readonly IServiceResolver _serviceResolver;
+
 
     public AuditWorkpaperService(
-        IAuditWorkpaperRepository repository, ILogger<AuditWorkpaperService> logger )
+        ApplicationTelemetry telemetry,
+        IAuditWorkpaperRepository repository,
+        ILogger<AuditWorkpaperService> logger,
+        IServiceResolver serviceResolver)
     {
+        _telemetry = telemetry;
         _repository = repository;
         _logger = logger;
+        _serviceResolver = serviceResolver;
     }
-
 
     public async Task Create(AuditWorkpaper model, CancellationToken cancellationToken)
     {
-
-         try
+        try
         {
-            await _repository.AddAsync(model, cancellationToken);
+            await _telemetry.Execute(
+                "AuditWorkpaper",
+                "CreateAuditWorkpaper",
+                () => _repository.AddAsync(model, cancellationToken));
         }
         catch (Exception ex)
         {
-            _logger.LogError($"Unexpected Error: {ex.Message}");
+            _logger.LogError(
+                    ex,
+                    "Unexpected error while creating Transaction.");
         }
     }
 
@@ -63,11 +75,16 @@ public class AuditWorkpaperService : IAuditWorkpaperService
             existing.Subject = model.Subject;
             existing.WorkpaperUrl = model.WorkpaperUrl;
 
-            await _repository.UpdateAsync(existing, cancellationToken);
+            await _telemetry.Execute(
+                "AuditWorkpaper",
+                "UpdateAuditWorkpaper",
+                () => _repository.UpdateAsync(existing, cancellationToken));
         }
         catch (Exception ex)
         {
-            _logger.LogError($"Unexpected Error: {ex.Message}");
+            _logger.LogError(
+                    ex,
+                    "Unexpected error while creating Transaction.");
             return false;
         }
         return true;
@@ -89,36 +106,140 @@ public class AuditWorkpaperService : IAuditWorkpaperService
 
         try
         {
-            await _repository.DeleteAsync(existing, cancellationToken);
+            await _telemetry.Execute(
+                "AuditWorkpaper",
+                "UpdateAuditWorkpaper",
+                () => _repository.DeleteAsync(existing, cancellationToken));
         }
         catch (Exception ex)
         {
-            _logger.LogError($"Unexpected Error: {ex.Message}");
+            _logger.LogError(
+                    ex,
+                    "Unexpected error while creating Transaction.");
             return false;
         }
         return true;
-
     }
 
     public async Task<bool> AssignEngagement(AssociationRequest request, CancellationToken cancellationToken) {
+
+        var parent = await _repository.GetByIdAsync(request.ParentId, cancellationToken);
+        if (parent is null)
+        {
+            _logger.LogError("No AuditWorkpaper found using Id {ParentId}", request.ParentId);
+            return false;
+        }
+
+        try
+        {
+            var childRequest = new IdentifierRequest
+            {
+                Id = request.ChildId,
+            };
+
+            var child = await _serviceResolver.Get<AuditEngagementService>().Get(childRequest, cancellationToken);
+            parent.Engagement = child;
+            await Update( parent, cancellationToken );
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(
+                    ex,
+                    "Unexpected error while creating Transaction.");
+            return false;
+        }
         return true;
     }
+
     public async Task<bool> UnassignEngagement(AssociationRequest request, CancellationToken cancellationToken) {
+        var parent = await _repository.GetByIdAsync(request.ParentId, cancellationToken);
+        if (parent is null)
+        {
+            _logger.LogError("No AuditWorkpaper found using Id {ParentId}", request.ParentId);
+            return false;
+        }
+
+        try
+        {
+            parent.Engagement = null;
+            await Update( parent, cancellationToken );
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(
+                    ex,
+                    "Unexpected error while creating Transaction.");
+            return false;
+        }
         return true;
     }
 
 
     public async Task<bool> AddToEvidence(MultipleAssociationRequest request, CancellationToken cancellationToken) {
+        try {
+            await _telemetry.Execute(
+                "AuditWorkpaper",
+                "AddToEvidence",
+                () => _repository.AddToEvidenceAsync(request, cancellationToken));
+        }
+        catch (Exception ex)
+        {
+           _logger.LogError(
+                   ex,
+                   "Unexpected error while creating Transaction.");
+            return false;
+        }
         return true;
     }
+
     public async Task<bool> RemoveFromEvidence(MultipleAssociationRequest request, CancellationToken cancellationToken) {
+        try {
+            await _telemetry.Execute(
+                "AuditWorkpaper",
+                "RemoveFromEvidence",
+                () => _repository.RemoveFromEvidenceAsync(request, cancellationToken));
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(
+                    ex,
+                    "Unexpected error while creating Transaction.");
+            return false;
+        }
         return true;
     }
 
     public async Task<bool> AddToFindings(MultipleAssociationRequest request, CancellationToken cancellationToken) {
+        try {
+            await _telemetry.Execute(
+                "AuditWorkpaper",
+                "AddToFindings",
+                () => _repository.AddToFindingsAsync(request, cancellationToken));
+        }
+        catch (Exception ex)
+        {
+           _logger.LogError(
+                   ex,
+                   "Unexpected error while creating Transaction.");
+            return false;
+        }
         return true;
     }
+
     public async Task<bool> RemoveFromFindings(MultipleAssociationRequest request, CancellationToken cancellationToken) {
+        try {
+            await _telemetry.Execute(
+                "AuditWorkpaper",
+                "RemoveFromFindings",
+                () => _repository.RemoveFromFindingsAsync(request, cancellationToken));
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(
+                    ex,
+                    "Unexpected error while creating Transaction.");
+            return false;
+        }
         return true;
     }
 

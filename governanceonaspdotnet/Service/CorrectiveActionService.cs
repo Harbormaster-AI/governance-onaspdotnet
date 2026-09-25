@@ -1,6 +1,8 @@
+
 using governanceonaspdotnet.Domain;
 using governanceonaspdotnet.Persistence;
 using governanceonaspdotnet.Contracts;
+using governanceonaspdotnet.Telemetry;
 
 namespace governanceonaspdotnet.Service;
 
@@ -11,7 +13,6 @@ public interface ICorrectiveActionService {
     Task<CorrectiveAction?> Get(IdentifierRequest identifier, CancellationToken cancellationToken);
     Task<IReadOnlyList<CorrectiveAction>> GetAll(CancellationToken cancellationToken);
     Task<bool> Delete(IdentifierRequest identifier, CancellationToken cancellationToken);
-
     // ------------------------------
     // Single Associations
     // -------------------------------
@@ -25,28 +26,38 @@ public interface ICorrectiveActionService {
 
 public class CorrectiveActionService : ICorrectiveActionService
 {
+    private readonly ApplicationTelemetry _telemetry;
     private readonly ICorrectiveActionRepository _repository;
     private readonly ILogger<CorrectiveActionService> _logger;
+    private readonly IServiceResolver _serviceResolver;
+
 
     public CorrectiveActionService(
-        ICorrectiveActionRepository repository, ILogger<CorrectiveActionService> logger )
+        ApplicationTelemetry telemetry,
+        ICorrectiveActionRepository repository,
+        ILogger<CorrectiveActionService> logger,
+        IServiceResolver serviceResolver)
     {
+        _telemetry = telemetry;
         _repository = repository;
         _logger = logger;
+        _serviceResolver = serviceResolver;
     }
-
 
     public async Task Create(CorrectiveAction model, CancellationToken cancellationToken)
     {
-
- 
-         try
+        try
         {
-            await _repository.AddAsync(model, cancellationToken);
+            await _telemetry.Execute(
+                "CorrectiveAction",
+                "CreateCorrectiveAction",
+                () => _repository.AddAsync(model, cancellationToken));
         }
         catch (Exception ex)
         {
-            _logger.LogError($"Unexpected Error: {ex.Message}");
+            _logger.LogError(
+                    ex,
+                    "Unexpected error while creating Transaction.");
         }
     }
 
@@ -63,11 +74,16 @@ public class CorrectiveActionService : ICorrectiveActionService
             existing.TargetDate = model.TargetDate;
             existing.Status = model.Status;
 
-            await _repository.UpdateAsync(existing, cancellationToken);
+            await _telemetry.Execute(
+                "CorrectiveAction",
+                "UpdateCorrectiveAction",
+                () => _repository.UpdateAsync(existing, cancellationToken));
         }
         catch (Exception ex)
         {
-            _logger.LogError($"Unexpected Error: {ex.Message}");
+            _logger.LogError(
+                    ex,
+                    "Unexpected error while creating Transaction.");
             return false;
         }
         return true;
@@ -89,28 +105,124 @@ public class CorrectiveActionService : ICorrectiveActionService
 
         try
         {
-            await _repository.DeleteAsync(existing, cancellationToken);
+            await _telemetry.Execute(
+                "CorrectiveAction",
+                "UpdateCorrectiveAction",
+                () => _repository.DeleteAsync(existing, cancellationToken));
         }
         catch (Exception ex)
         {
-            _logger.LogError($"Unexpected Error: {ex.Message}");
+            _logger.LogError(
+                    ex,
+                    "Unexpected error while creating Transaction.");
             return false;
         }
         return true;
-
     }
 
     public async Task<bool> AssignFinding(AssociationRequest request, CancellationToken cancellationToken) {
+
+        var parent = await _repository.GetByIdAsync(request.ParentId, cancellationToken);
+        if (parent is null)
+        {
+            _logger.LogError("No CorrectiveAction found using Id {ParentId}", request.ParentId);
+            return false;
+        }
+
+        try
+        {
+            var childRequest = new IdentifierRequest
+            {
+                Id = request.ChildId,
+            };
+
+            var child = await _serviceResolver.Get<AuditFindingService>().Get(childRequest, cancellationToken);
+            parent.Finding = child;
+            await Update( parent, cancellationToken );
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(
+                    ex,
+                    "Unexpected error while creating Transaction.");
+            return false;
+        }
         return true;
     }
+
     public async Task<bool> UnassignFinding(AssociationRequest request, CancellationToken cancellationToken) {
+        var parent = await _repository.GetByIdAsync(request.ParentId, cancellationToken);
+        if (parent is null)
+        {
+            _logger.LogError("No CorrectiveAction found using Id {ParentId}", request.ParentId);
+            return false;
+        }
+
+        try
+        {
+            parent.Finding = null;
+            await Update( parent, cancellationToken );
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(
+                    ex,
+                    "Unexpected error while creating Transaction.");
+            return false;
+        }
         return true;
     }
 
     public async Task<bool> AssignIssue(AssociationRequest request, CancellationToken cancellationToken) {
+
+        var parent = await _repository.GetByIdAsync(request.ParentId, cancellationToken);
+        if (parent is null)
+        {
+            _logger.LogError("No CorrectiveAction found using Id {ParentId}", request.ParentId);
+            return false;
+        }
+
+        try
+        {
+            var childRequest = new IdentifierRequest
+            {
+                Id = request.ChildId,
+            };
+
+            var child = await _serviceResolver.Get<IssueService>().Get(childRequest, cancellationToken);
+            parent.Issue = child;
+            await Update( parent, cancellationToken );
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(
+                    ex,
+                    "Unexpected error while creating Transaction.");
+            return false;
+        }
         return true;
     }
+
     public async Task<bool> UnassignIssue(AssociationRequest request, CancellationToken cancellationToken) {
+        var parent = await _repository.GetByIdAsync(request.ParentId, cancellationToken);
+        if (parent is null)
+        {
+            _logger.LogError("No CorrectiveAction found using Id {ParentId}", request.ParentId);
+            return false;
+        }
+
+        try
+        {
+            parent.Issue = null;
+            await Update( parent, cancellationToken );
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(
+                    ex,
+                    "Unexpected error while creating Transaction.");
+            return false;
+        }
         return true;
     }
 

@@ -1,4 +1,5 @@
 using governanceonaspdotnet.Domain;
+using governanceonaspdotnet.Contracts;
 
 namespace governanceonaspdotnet.Persistence;
 
@@ -9,4 +10,8 @@ public interface IConsentRepository
     Task AddAsync(Consent consent, CancellationToken cancellationToken);
     Task UpdateAsync(Consent consent, CancellationToken cancellationToken);
     Task DeleteAsync(Consent consent, CancellationToken cancellationToken);
+
+    Task AddToProcessingActivitiesAsync( MultipleAssociationRequest request, CancellationToken cancellationToken);
+    Task RemoveFromProcessingActivitiesAsync( MultipleAssociationRequest request, CancellationToken cancellationToken);
+
 }

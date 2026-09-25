@@ -1,4 +1,7 @@
+
+using governanceonaspdotnet.Contracts;
 using governanceonaspdotnet.Domain;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace governanceonaspdotnet.Persistence;
@@ -46,4 +49,41 @@ public class ControlTest_Repository : IControlTest_Repository
         _db.ControlTest_s.Remove(controlTest_);
         await _db.SaveChangesAsync(cancellationToken);
     }
+
+
+    public async Task AddToEvidenceAsync(
+        MultipleAssociationRequest request,
+        CancellationToken cancellationToken)
+    {
+        await _db.Evidences
+            .Where(evidence =>
+                request.ChildIds.Contains(evidence.Id))
+            .ExecuteUpdateAsync(setters =>
+                setters.SetProperty(
+                    evidence =>
+                        EF.Property<Guid?>(
+                            evidence,
+                            "DataBreach_Id"),
+                    request.ParentId));
+    }
+
+    public async Task RemoveFromEvidenceAsync(
+        MultipleAssociationRequest request,
+        CancellationToken cancellationToken)
+    {
+        await _db.Evidences
+            .Where(evidence =>
+                request.ChildIds.Contains(evidence.Id) &&
+                EF.Property<Guid?>(
+                    evidence,
+                    "DataBreach_Id") == request.ParentId)
+            .ExecuteUpdateAsync(setters =>
+                setters.SetProperty(
+                    evidence =>
+                        EF.Property<Guid?>(
+                            evidence,
+                            "DataBreach_Id"),
+                    (Guid?)null));
+    }
+
 }

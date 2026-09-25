@@ -1,4 +1,7 @@
+
+using governanceonaspdotnet.Contracts;
 using governanceonaspdotnet.Domain;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace governanceonaspdotnet.Persistence;
@@ -44,4 +47,5 @@ public class RiskAssessmentRepository : IRiskAssessmentRepository
         _db.RiskAssessments.Remove(riskAssessment);
         await _db.SaveChangesAsync(cancellationToken);
     }
+
 }

@@ -1,4 +1,7 @@
+
+using governanceonaspdotnet.Contracts;
 using governanceonaspdotnet.Domain;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace governanceonaspdotnet.Persistence;
@@ -46,4 +49,149 @@ public class Record_Repository : IRecord_Repository
         _db.Record_s.Remove(record_);
         await _db.SaveChangesAsync(cancellationToken);
     }
+
+
+    public async Task AddToProcessingActivitiesAsync(
+        MultipleAssociationRequest request,
+        CancellationToken cancellationToken)
+    {
+        await _db.DataProcessingActivitys
+            .Where(dataProcessingActivity =>
+                request.ChildIds.Contains(dataProcessingActivity.Id))
+            .ExecuteUpdateAsync(setters =>
+                setters.SetProperty(
+                    dataProcessingActivity =>
+                        EF.Property<Guid?>(
+                            dataProcessingActivity,
+                            "DataBreach_Id"),
+                    request.ParentId));
+    }
+
+    public async Task RemoveFromProcessingActivitiesAsync(
+        MultipleAssociationRequest request,
+        CancellationToken cancellationToken)
+    {
+        await _db.DataProcessingActivitys
+            .Where(dataProcessingActivity =>
+                request.ChildIds.Contains(dataProcessingActivity.Id) &&
+                EF.Property<Guid?>(
+                    dataProcessingActivity,
+                    "DataBreach_Id") == request.ParentId)
+            .ExecuteUpdateAsync(setters =>
+                setters.SetProperty(
+                    dataProcessingActivity =>
+                        EF.Property<Guid?>(
+                            dataProcessingActivity,
+                            "DataBreach_Id"),
+                    (Guid?)null));
+    }
+
+
+    public async Task AddToDataCategoriesAsync(
+        MultipleAssociationRequest request,
+        CancellationToken cancellationToken)
+    {
+        await _db.DataCategorys
+            .Where(dataCategory =>
+                request.ChildIds.Contains(dataCategory.Id))
+            .ExecuteUpdateAsync(setters =>
+                setters.SetProperty(
+                    dataCategory =>
+                        EF.Property<Guid?>(
+                            dataCategory,
+                            "DataBreach_Id"),
+                    request.ParentId));
+    }
+
+    public async Task RemoveFromDataCategoriesAsync(
+        MultipleAssociationRequest request,
+        CancellationToken cancellationToken)
+    {
+        await _db.DataCategorys
+            .Where(dataCategory =>
+                request.ChildIds.Contains(dataCategory.Id) &&
+                EF.Property<Guid?>(
+                    dataCategory,
+                    "DataBreach_Id") == request.ParentId)
+            .ExecuteUpdateAsync(setters =>
+                setters.SetProperty(
+                    dataCategory =>
+                        EF.Property<Guid?>(
+                            dataCategory,
+                            "DataBreach_Id"),
+                    (Guid?)null));
+    }
+
+
+    public async Task AddToLegalHoldsAsync(
+        MultipleAssociationRequest request,
+        CancellationToken cancellationToken)
+    {
+        await _db.LegalHolds
+            .Where(legalHold =>
+                request.ChildIds.Contains(legalHold.Id))
+            .ExecuteUpdateAsync(setters =>
+                setters.SetProperty(
+                    legalHold =>
+                        EF.Property<Guid?>(
+                            legalHold,
+                            "DataBreach_Id"),
+                    request.ParentId));
+    }
+
+    public async Task RemoveFromLegalHoldsAsync(
+        MultipleAssociationRequest request,
+        CancellationToken cancellationToken)
+    {
+        await _db.LegalHolds
+            .Where(legalHold =>
+                request.ChildIds.Contains(legalHold.Id) &&
+                EF.Property<Guid?>(
+                    legalHold,
+                    "DataBreach_Id") == request.ParentId)
+            .ExecuteUpdateAsync(setters =>
+                setters.SetProperty(
+                    legalHold =>
+                        EF.Property<Guid?>(
+                            legalHold,
+                            "DataBreach_Id"),
+                    (Guid?)null));
+    }
+
+
+    public async Task AddToDataSubjectRequestsAsync(
+        MultipleAssociationRequest request,
+        CancellationToken cancellationToken)
+    {
+        await _db.DataSubjectRequests
+            .Where(dataSubjectRequest =>
+                request.ChildIds.Contains(dataSubjectRequest.Id))
+            .ExecuteUpdateAsync(setters =>
+                setters.SetProperty(
+                    dataSubjectRequest =>
+                        EF.Property<Guid?>(
+                            dataSubjectRequest,
+                            "DataBreach_Id"),
+                    request.ParentId));
+    }
+
+    public async Task RemoveFromDataSubjectRequestsAsync(
+        MultipleAssociationRequest request,
+        CancellationToken cancellationToken)
+    {
+        await _db.DataSubjectRequests
+            .Where(dataSubjectRequest =>
+                request.ChildIds.Contains(dataSubjectRequest.Id) &&
+                EF.Property<Guid?>(
+                    dataSubjectRequest,
+                    "DataBreach_Id") == request.ParentId)
+            .ExecuteUpdateAsync(setters =>
+                setters.SetProperty(
+                    dataSubjectRequest =>
+                        EF.Property<Guid?>(
+                            dataSubjectRequest,
+                            "DataBreach_Id"),
+                    (Guid?)null));
+    }
+
 }

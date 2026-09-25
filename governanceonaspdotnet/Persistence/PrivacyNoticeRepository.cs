@@ -1,4 +1,7 @@
+
+using governanceonaspdotnet.Contracts;
 using governanceonaspdotnet.Domain;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace governanceonaspdotnet.Persistence;
@@ -44,4 +47,77 @@ public class PrivacyNoticeRepository : IPrivacyNoticeRepository
         _db.PrivacyNotices.Remove(privacyNotice);
         await _db.SaveChangesAsync(cancellationToken);
     }
+
+
+    public async Task AddToProcessingActivitiesAsync(
+        MultipleAssociationRequest request,
+        CancellationToken cancellationToken)
+    {
+        await _db.DataProcessingActivitys
+            .Where(dataProcessingActivity =>
+                request.ChildIds.Contains(dataProcessingActivity.Id))
+            .ExecuteUpdateAsync(setters =>
+                setters.SetProperty(
+                    dataProcessingActivity =>
+                        EF.Property<Guid?>(
+                            dataProcessingActivity,
+                            "DataBreach_Id"),
+                    request.ParentId));
+    }
+
+    public async Task RemoveFromProcessingActivitiesAsync(
+        MultipleAssociationRequest request,
+        CancellationToken cancellationToken)
+    {
+        await _db.DataProcessingActivitys
+            .Where(dataProcessingActivity =>
+                request.ChildIds.Contains(dataProcessingActivity.Id) &&
+                EF.Property<Guid?>(
+                    dataProcessingActivity,
+                    "DataBreach_Id") == request.ParentId)
+            .ExecuteUpdateAsync(setters =>
+                setters.SetProperty(
+                    dataProcessingActivity =>
+                        EF.Property<Guid?>(
+                            dataProcessingActivity,
+                            "DataBreach_Id"),
+                    (Guid?)null));
+    }
+
+
+    public async Task AddToConsentsAsync(
+        MultipleAssociationRequest request,
+        CancellationToken cancellationToken)
+    {
+        await _db.Consents
+            .Where(consent =>
+                request.ChildIds.Contains(consent.Id))
+            .ExecuteUpdateAsync(setters =>
+                setters.SetProperty(
+                    consent =>
+                        EF.Property<Guid?>(
+                            consent,
+                            "DataBreach_Id"),
+                    request.ParentId));
+    }
+
+    public async Task RemoveFromConsentsAsync(
+        MultipleAssociationRequest request,
+        CancellationToken cancellationToken)
+    {
+        await _db.Consents
+            .Where(consent =>
+                request.ChildIds.Contains(consent.Id) &&
+                EF.Property<Guid?>(
+                    consent,
+                    "DataBreach_Id") == request.ParentId)
+            .ExecuteUpdateAsync(setters =>
+                setters.SetProperty(
+                    consent =>
+                        EF.Property<Guid?>(
+                            consent,
+                            "DataBreach_Id"),
+                    (Guid?)null));
+    }
+
 }

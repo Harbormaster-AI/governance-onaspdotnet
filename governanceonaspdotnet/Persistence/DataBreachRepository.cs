@@ -1,4 +1,7 @@
+
+using governanceonaspdotnet.Contracts;
 using governanceonaspdotnet.Domain;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace governanceonaspdotnet.Persistence;
@@ -46,4 +49,113 @@ public class DataBreachRepository : IDataBreachRepository
         _db.DataBreachs.Remove(dataBreach);
         await _db.SaveChangesAsync(cancellationToken);
     }
+
+
+    public async Task AddToProcessingActivitiesAsync(
+        MultipleAssociationRequest request,
+        CancellationToken cancellationToken)
+    {
+        await _db.DataProcessingActivitys
+            .Where(dataProcessingActivity =>
+                request.ChildIds.Contains(dataProcessingActivity.Id))
+            .ExecuteUpdateAsync(setters =>
+                setters.SetProperty(
+                    dataProcessingActivity =>
+                        EF.Property<Guid?>(
+                            dataProcessingActivity,
+                            "DataBreach_Id"),
+                    request.ParentId));
+    }
+
+    public async Task RemoveFromProcessingActivitiesAsync(
+        MultipleAssociationRequest request,
+        CancellationToken cancellationToken)
+    {
+        await _db.DataProcessingActivitys
+            .Where(dataProcessingActivity =>
+                request.ChildIds.Contains(dataProcessingActivity.Id) &&
+                EF.Property<Guid?>(
+                    dataProcessingActivity,
+                    "DataBreach_Id") == request.ParentId)
+            .ExecuteUpdateAsync(setters =>
+                setters.SetProperty(
+                    dataProcessingActivity =>
+                        EF.Property<Guid?>(
+                            dataProcessingActivity,
+                            "DataBreach_Id"),
+                    (Guid?)null));
+    }
+
+
+    public async Task AddToDataCategoriesAsync(
+        MultipleAssociationRequest request,
+        CancellationToken cancellationToken)
+    {
+        await _db.DataCategorys
+            .Where(dataCategory =>
+                request.ChildIds.Contains(dataCategory.Id))
+            .ExecuteUpdateAsync(setters =>
+                setters.SetProperty(
+                    dataCategory =>
+                        EF.Property<Guid?>(
+                            dataCategory,
+                            "DataBreach_Id"),
+                    request.ParentId));
+    }
+
+    public async Task RemoveFromDataCategoriesAsync(
+        MultipleAssociationRequest request,
+        CancellationToken cancellationToken)
+    {
+        await _db.DataCategorys
+            .Where(dataCategory =>
+                request.ChildIds.Contains(dataCategory.Id) &&
+                EF.Property<Guid?>(
+                    dataCategory,
+                    "DataBreach_Id") == request.ParentId)
+            .ExecuteUpdateAsync(setters =>
+                setters.SetProperty(
+                    dataCategory =>
+                        EF.Property<Guid?>(
+                            dataCategory,
+                            "DataBreach_Id"),
+                    (Guid?)null));
+    }
+
+
+    public async Task AddToThirdPartiesAsync(
+        MultipleAssociationRequest request,
+        CancellationToken cancellationToken)
+    {
+        await _db.ThirdPartys
+            .Where(thirdParty =>
+                request.ChildIds.Contains(thirdParty.Id))
+            .ExecuteUpdateAsync(setters =>
+                setters.SetProperty(
+                    thirdParty =>
+                        EF.Property<Guid?>(
+                            thirdParty,
+                            "DataBreach_Id"),
+                    request.ParentId));
+    }
+
+    public async Task RemoveFromThirdPartiesAsync(
+        MultipleAssociationRequest request,
+        CancellationToken cancellationToken)
+    {
+        await _db.ThirdPartys
+            .Where(thirdParty =>
+                request.ChildIds.Contains(thirdParty.Id) &&
+                EF.Property<Guid?>(
+                    thirdParty,
+                    "DataBreach_Id") == request.ParentId)
+            .ExecuteUpdateAsync(setters =>
+                setters.SetProperty(
+                    thirdParty =>
+                        EF.Property<Guid?>(
+                            thirdParty,
+                            "DataBreach_Id"),
+                    (Guid?)null));
+    }
+
 }

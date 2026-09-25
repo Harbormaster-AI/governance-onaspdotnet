@@ -1,4 +1,7 @@
+
+using governanceonaspdotnet.Contracts;
 using governanceonaspdotnet.Domain;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace governanceonaspdotnet.Persistence;
@@ -42,4 +45,41 @@ public class RoleRepository : IRoleRepository
         _db.Roles.Remove(role);
         await _db.SaveChangesAsync(cancellationToken);
     }
+
+
+    public async Task AddToAssignmentsAsync(
+        MultipleAssociationRequest request,
+        CancellationToken cancellationToken)
+    {
+        await _db.RoleAssignments
+            .Where(roleAssignment =>
+                request.ChildIds.Contains(roleAssignment.Id))
+            .ExecuteUpdateAsync(setters =>
+                setters.SetProperty(
+                    roleAssignment =>
+                        EF.Property<Guid?>(
+                            roleAssignment,
+                            "DataBreach_Id"),
+                    request.ParentId));
+    }
+
+    public async Task RemoveFromAssignmentsAsync(
+        MultipleAssociationRequest request,
+        CancellationToken cancellationToken)
+    {
+        await _db.RoleAssignments
+            .Where(roleAssignment =>
+                request.ChildIds.Contains(roleAssignment.Id) &&
+                EF.Property<Guid?>(
+                    roleAssignment,
+                    "DataBreach_Id") == request.ParentId)
+            .ExecuteUpdateAsync(setters =>
+                setters.SetProperty(
+                    roleAssignment =>
+                        EF.Property<Guid?>(
+                            roleAssignment,
+                            "DataBreach_Id"),
+                    (Guid?)null));
+    }
+
 }

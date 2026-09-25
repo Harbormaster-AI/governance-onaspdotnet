@@ -1,4 +1,7 @@
+
+using governanceonaspdotnet.Contracts;
 using governanceonaspdotnet.Domain;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace governanceonaspdotnet.Persistence;
@@ -44,4 +47,41 @@ public class ThirdPartyAssessmentRepository : IThirdPartyAssessmentRepository
         _db.ThirdPartyAssessments.Remove(thirdPartyAssessment);
         await _db.SaveChangesAsync(cancellationToken);
     }
+
+
+    public async Task AddToIssuesAsync(
+        MultipleAssociationRequest request,
+        CancellationToken cancellationToken)
+    {
+        await _db.Issues
+            .Where(issue =>
+                request.ChildIds.Contains(issue.Id))
+            .ExecuteUpdateAsync(setters =>
+                setters.SetProperty(
+                    issue =>
+                        EF.Property<Guid?>(
+                            issue,
+                            "DataBreach_Id"),
+                    request.ParentId));
+    }
+
+    public async Task RemoveFromIssuesAsync(
+        MultipleAssociationRequest request,
+        CancellationToken cancellationToken)
+    {
+        await _db.Issues
+            .Where(issue =>
+                request.ChildIds.Contains(issue.Id) &&
+                EF.Property<Guid?>(
+                    issue,
+                    "DataBreach_Id") == request.ParentId)
+            .ExecuteUpdateAsync(setters =>
+                setters.SetProperty(
+                    issue =>
+                        EF.Property<Guid?>(
+                            issue,
+                            "DataBreach_Id"),
+                    (Guid?)null));
+    }
+
 }

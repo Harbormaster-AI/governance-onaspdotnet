@@ -1,4 +1,7 @@
+
+using governanceonaspdotnet.Contracts;
 using governanceonaspdotnet.Domain;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace governanceonaspdotnet.Persistence;
@@ -48,4 +51,41 @@ public class IssueRepository : IIssueRepository
         _db.Issues.Remove(issue);
         await _db.SaveChangesAsync(cancellationToken);
     }
+
+
+    public async Task AddToCorrectiveActionsAsync(
+        MultipleAssociationRequest request,
+        CancellationToken cancellationToken)
+    {
+        await _db.CorrectiveActions
+            .Where(correctiveAction =>
+                request.ChildIds.Contains(correctiveAction.Id))
+            .ExecuteUpdateAsync(setters =>
+                setters.SetProperty(
+                    correctiveAction =>
+                        EF.Property<Guid?>(
+                            correctiveAction,
+                            "DataBreach_Id"),
+                    request.ParentId));
+    }
+
+    public async Task RemoveFromCorrectiveActionsAsync(
+        MultipleAssociationRequest request,
+        CancellationToken cancellationToken)
+    {
+        await _db.CorrectiveActions
+            .Where(correctiveAction =>
+                request.ChildIds.Contains(correctiveAction.Id) &&
+                EF.Property<Guid?>(
+                    correctiveAction,
+                    "DataBreach_Id") == request.ParentId)
+            .ExecuteUpdateAsync(setters =>
+                setters.SetProperty(
+                    correctiveAction =>
+                        EF.Property<Guid?>(
+                            correctiveAction,
+                            "DataBreach_Id"),
+                    (Guid?)null));
+    }
+
 }

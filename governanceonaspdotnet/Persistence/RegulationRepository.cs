@@ -1,4 +1,7 @@
+
+using governanceonaspdotnet.Contracts;
 using governanceonaspdotnet.Domain;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace governanceonaspdotnet.Persistence;
@@ -42,4 +45,77 @@ public class RegulationRepository : IRegulationRepository
         _db.Regulations.Remove(regulation);
         await _db.SaveChangesAsync(cancellationToken);
     }
+
+
+    public async Task AddToObligationsAsync(
+        MultipleAssociationRequest request,
+        CancellationToken cancellationToken)
+    {
+        await _db.Obligations
+            .Where(obligation =>
+                request.ChildIds.Contains(obligation.Id))
+            .ExecuteUpdateAsync(setters =>
+                setters.SetProperty(
+                    obligation =>
+                        EF.Property<Guid?>(
+                            obligation,
+                            "DataBreach_Id"),
+                    request.ParentId));
+    }
+
+    public async Task RemoveFromObligationsAsync(
+        MultipleAssociationRequest request,
+        CancellationToken cancellationToken)
+    {
+        await _db.Obligations
+            .Where(obligation =>
+                request.ChildIds.Contains(obligation.Id) &&
+                EF.Property<Guid?>(
+                    obligation,
+                    "DataBreach_Id") == request.ParentId)
+            .ExecuteUpdateAsync(setters =>
+                setters.SetProperty(
+                    obligation =>
+                        EF.Property<Guid?>(
+                            obligation,
+                            "DataBreach_Id"),
+                    (Guid?)null));
+    }
+
+
+    public async Task AddToComplianceProgramsAsync(
+        MultipleAssociationRequest request,
+        CancellationToken cancellationToken)
+    {
+        await _db.CompliancePrograms
+            .Where(complianceProgram =>
+                request.ChildIds.Contains(complianceProgram.Id))
+            .ExecuteUpdateAsync(setters =>
+                setters.SetProperty(
+                    complianceProgram =>
+                        EF.Property<Guid?>(
+                            complianceProgram,
+                            "DataBreach_Id"),
+                    request.ParentId));
+    }
+
+    public async Task RemoveFromComplianceProgramsAsync(
+        MultipleAssociationRequest request,
+        CancellationToken cancellationToken)
+    {
+        await _db.CompliancePrograms
+            .Where(complianceProgram =>
+                request.ChildIds.Contains(complianceProgram.Id) &&
+                EF.Property<Guid?>(
+                    complianceProgram,
+                    "DataBreach_Id") == request.ParentId)
+            .ExecuteUpdateAsync(setters =>
+                setters.SetProperty(
+                    complianceProgram =>
+                        EF.Property<Guid?>(
+                            complianceProgram,
+                            "DataBreach_Id"),
+                    (Guid?)null));
+    }
+
 }

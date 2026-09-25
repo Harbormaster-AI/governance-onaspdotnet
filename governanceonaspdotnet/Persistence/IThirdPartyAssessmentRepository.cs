@@ -1,4 +1,5 @@
 using governanceonaspdotnet.Domain;
+using governanceonaspdotnet.Contracts;
 
 namespace governanceonaspdotnet.Persistence;
 
@@ -9,4 +10,8 @@ public interface IThirdPartyAssessmentRepository
     Task AddAsync(ThirdPartyAssessment thirdPartyAssessment, CancellationToken cancellationToken);
     Task UpdateAsync(ThirdPartyAssessment thirdPartyAssessment, CancellationToken cancellationToken);
     Task DeleteAsync(ThirdPartyAssessment thirdPartyAssessment, CancellationToken cancellationToken);
+
+    Task AddToIssuesAsync( MultipleAssociationRequest request, CancellationToken cancellationToken);
+    Task RemoveFromIssuesAsync( MultipleAssociationRequest request, CancellationToken cancellationToken);
+
 }

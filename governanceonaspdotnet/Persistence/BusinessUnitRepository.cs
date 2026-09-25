@@ -1,4 +1,7 @@
+
+using governanceonaspdotnet.Contracts;
 using governanceonaspdotnet.Domain;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace governanceonaspdotnet.Persistence;
@@ -44,4 +47,41 @@ public class BusinessUnitRepository : IBusinessUnitRepository
         _db.BusinessUnits.Remove(businessUnit);
         await _db.SaveChangesAsync(cancellationToken);
     }
+
+
+    public async Task AddToAuditsAsync(
+        MultipleAssociationRequest request,
+        CancellationToken cancellationToken)
+    {
+        await _db.AuditEngagements
+            .Where(auditEngagement =>
+                request.ChildIds.Contains(auditEngagement.Id))
+            .ExecuteUpdateAsync(setters =>
+                setters.SetProperty(
+                    auditEngagement =>
+                        EF.Property<Guid?>(
+                            auditEngagement,
+                            "DataBreach_Id"),
+                    request.ParentId));
+    }
+
+    public async Task RemoveFromAuditsAsync(
+        MultipleAssociationRequest request,
+        CancellationToken cancellationToken)
+    {
+        await _db.AuditEngagements
+            .Where(auditEngagement =>
+                request.ChildIds.Contains(auditEngagement.Id) &&
+                EF.Property<Guid?>(
+                    auditEngagement,
+                    "DataBreach_Id") == request.ParentId)
+            .ExecuteUpdateAsync(setters =>
+                setters.SetProperty(
+                    auditEngagement =>
+                        EF.Property<Guid?>(
+                            auditEngagement,
+                            "DataBreach_Id"),
+                    (Guid?)null));
+    }
+
 }

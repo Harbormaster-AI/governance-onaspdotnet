@@ -1,4 +1,5 @@
 using governanceonaspdotnet.Domain;
+using governanceonaspdotnet.Contracts;
 
 namespace governanceonaspdotnet.Persistence;
 
@@ -9,4 +10,6 @@ public interface IAttestationRepository
     Task AddAsync(Attestation attestation, CancellationToken cancellationToken);
     Task UpdateAsync(Attestation attestation, CancellationToken cancellationToken);
     Task DeleteAsync(Attestation attestation, CancellationToken cancellationToken);
+
+
 }

@@ -1,4 +1,7 @@
+
+using governanceonaspdotnet.Contracts;
 using governanceonaspdotnet.Domain;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace governanceonaspdotnet.Persistence;
@@ -50,4 +53,5 @@ public class Exception_Repository : IException_Repository
         _db.Exception_s.Remove(exception_);
         await _db.SaveChangesAsync(cancellationToken);
     }
+
 }

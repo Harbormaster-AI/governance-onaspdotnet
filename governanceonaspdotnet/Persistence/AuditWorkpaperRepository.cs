@@ -1,4 +1,7 @@
+
+using governanceonaspdotnet.Contracts;
 using governanceonaspdotnet.Domain;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace governanceonaspdotnet.Persistence;
@@ -44,4 +47,77 @@ public class AuditWorkpaperRepository : IAuditWorkpaperRepository
         _db.AuditWorkpapers.Remove(auditWorkpaper);
         await _db.SaveChangesAsync(cancellationToken);
     }
+
+
+    public async Task AddToEvidenceAsync(
+        MultipleAssociationRequest request,
+        CancellationToken cancellationToken)
+    {
+        await _db.Evidences
+            .Where(evidence =>
+                request.ChildIds.Contains(evidence.Id))
+            .ExecuteUpdateAsync(setters =>
+                setters.SetProperty(
+                    evidence =>
+                        EF.Property<Guid?>(
+                            evidence,
+                            "DataBreach_Id"),
+                    request.ParentId));
+    }
+
+    public async Task RemoveFromEvidenceAsync(
+        MultipleAssociationRequest request,
+        CancellationToken cancellationToken)
+    {
+        await _db.Evidences
+            .Where(evidence =>
+                request.ChildIds.Contains(evidence.Id) &&
+                EF.Property<Guid?>(
+                    evidence,
+                    "DataBreach_Id") == request.ParentId)
+            .ExecuteUpdateAsync(setters =>
+                setters.SetProperty(
+                    evidence =>
+                        EF.Property<Guid?>(
+                            evidence,
+                            "DataBreach_Id"),
+                    (Guid?)null));
+    }
+
+
+    public async Task AddToFindingsAsync(
+        MultipleAssociationRequest request,
+        CancellationToken cancellationToken)
+    {
+        await _db.AuditFindings
+            .Where(auditFinding =>
+                request.ChildIds.Contains(auditFinding.Id))
+            .ExecuteUpdateAsync(setters =>
+                setters.SetProperty(
+                    auditFinding =>
+                        EF.Property<Guid?>(
+                            auditFinding,
+                            "DataBreach_Id"),
+                    request.ParentId));
+    }
+
+    public async Task RemoveFromFindingsAsync(
+        MultipleAssociationRequest request,
+        CancellationToken cancellationToken)
+    {
+        await _db.AuditFindings
+            .Where(auditFinding =>
+                request.ChildIds.Contains(auditFinding.Id) &&
+                EF.Property<Guid?>(
+                    auditFinding,
+                    "DataBreach_Id") == request.ParentId)
+            .ExecuteUpdateAsync(setters =>
+                setters.SetProperty(
+                    auditFinding =>
+                        EF.Property<Guid?>(
+                            auditFinding,
+                            "DataBreach_Id"),
+                    (Guid?)null));
+    }
+
 }

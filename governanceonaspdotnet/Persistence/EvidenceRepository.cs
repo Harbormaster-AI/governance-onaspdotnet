@@ -1,4 +1,7 @@
+
+using governanceonaspdotnet.Contracts;
 using governanceonaspdotnet.Domain;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace governanceonaspdotnet.Persistence;
@@ -50,4 +53,5 @@ public class EvidenceRepository : IEvidenceRepository
         _db.Evidences.Remove(evidence);
         await _db.SaveChangesAsync(cancellationToken);
     }
+
 }

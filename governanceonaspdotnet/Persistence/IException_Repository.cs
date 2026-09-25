@@ -1,4 +1,5 @@
 using governanceonaspdotnet.Domain;
+using governanceonaspdotnet.Contracts;
 
 namespace governanceonaspdotnet.Persistence;
 
@@ -9,4 +10,6 @@ public interface IException_Repository
     Task AddAsync(Exception_ exception_, CancellationToken cancellationToken);
     Task UpdateAsync(Exception_ exception_, CancellationToken cancellationToken);
     Task DeleteAsync(Exception_ exception_, CancellationToken cancellationToken);
+
+
 }

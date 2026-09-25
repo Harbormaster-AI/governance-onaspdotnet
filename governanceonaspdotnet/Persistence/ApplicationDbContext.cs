@@ -11,47 +11,47 @@ public class ApplicationDbContext : DbContext
     {
     }
 
-public DbSet<Organization> Organizations => Set<Organization>();
-public DbSet<GovernanceBody> GovernanceBodys => Set<GovernanceBody>();
-public DbSet<Person> Persons => Set<Person>();
-public DbSet<Role> Roles => Set<Role>();
-public DbSet<RoleAssignment> RoleAssignments => Set<RoleAssignment>();
-public DbSet<Policy> Policys => Set<Policy>();
-public DbSet<Procedure> Procedures => Set<Procedure>();
-public DbSet<Regulation> Regulations => Set<Regulation>();
-public DbSet<Obligation> Obligations => Set<Obligation>();
-public DbSet<Control> Controls => Set<Control>();
-public DbSet<ControlTest_> ControlTest_s => Set<ControlTest_>();
-public DbSet<Evidence> Evidences => Set<Evidence>();
-public DbSet<Risk> Risks => Set<Risk>();
-public DbSet<RiskAssessment> RiskAssessments => Set<RiskAssessment>();
-public DbSet<ComplianceProgram> CompliancePrograms => Set<ComplianceProgram>();
-public DbSet<ComplianceRequirement> ComplianceRequirements => Set<ComplianceRequirement>();
-public DbSet<Attestation> Attestations => Set<Attestation>();
-public DbSet<AuditProgram> AuditPrograms => Set<AuditProgram>();
-public DbSet<AuditEngagement> AuditEngagements => Set<AuditEngagement>();
-public DbSet<AuditWorkpaper> AuditWorkpapers => Set<AuditWorkpaper>();
-public DbSet<AuditFinding> AuditFindings => Set<AuditFinding>();
-public DbSet<CorrectiveAction> CorrectiveActions => Set<CorrectiveAction>();
-public DbSet<Issue> Issues => Set<Issue>();
-public DbSet<BusinessUnit> BusinessUnits => Set<BusinessUnit>();
-public DbSet<DataProcessingActivity> DataProcessingActivitys => Set<DataProcessingActivity>();
-public DbSet<DataCategory> DataCategorys => Set<DataCategory>();
-public DbSet<System_> System_s => Set<System_>();
-public DbSet<PrivacyNotice> PrivacyNotices => Set<PrivacyNotice>();
-public DbSet<DataSubjectRequest> DataSubjectRequests => Set<DataSubjectRequest>();
-public DbSet<RecordsRepository> RecordsRepositorys => Set<RecordsRepository>();
-public DbSet<Record_> Record_s => Set<Record_>();
-public DbSet<RetentionSchedule> RetentionSchedules => Set<RetentionSchedule>();
-public DbSet<DispositionReview> DispositionReviews => Set<DispositionReview>();
-public DbSet<LegalHold> LegalHolds => Set<LegalHold>();
-public DbSet<Matter> Matters => Set<Matter>();
-public DbSet<ThirdParty> ThirdPartys => Set<ThirdParty>();
-public DbSet<ThirdPartyAssessment> ThirdPartyAssessments => Set<ThirdPartyAssessment>();
-public DbSet<Contract> Contracts => Set<Contract>();
-public DbSet<Exception_> Exception_s => Set<Exception_>();
-public DbSet<Consent> Consents => Set<Consent>();
-public DbSet<DataBreach> DataBreachs => Set<DataBreach>();
+    public DbSet<Organization> Organizations => Set<Organization>();
+    public DbSet<GovernanceBody> GovernanceBodys => Set<GovernanceBody>();
+    public DbSet<Person> Persons => Set<Person>();
+    public DbSet<Role> Roles => Set<Role>();
+    public DbSet<RoleAssignment> RoleAssignments => Set<RoleAssignment>();
+    public DbSet<Policy> Policys => Set<Policy>();
+    public DbSet<Procedure> Procedures => Set<Procedure>();
+    public DbSet<Regulation> Regulations => Set<Regulation>();
+    public DbSet<Obligation> Obligations => Set<Obligation>();
+    public DbSet<Control> Controls => Set<Control>();
+    public DbSet<ControlTest_> ControlTest_s => Set<ControlTest_>();
+    public DbSet<Evidence> Evidences => Set<Evidence>();
+    public DbSet<Risk> Risks => Set<Risk>();
+    public DbSet<RiskAssessment> RiskAssessments => Set<RiskAssessment>();
+    public DbSet<ComplianceProgram> CompliancePrograms => Set<ComplianceProgram>();
+    public DbSet<ComplianceRequirement> ComplianceRequirements => Set<ComplianceRequirement>();
+    public DbSet<Attestation> Attestations => Set<Attestation>();
+    public DbSet<AuditProgram> AuditPrograms => Set<AuditProgram>();
+    public DbSet<AuditEngagement> AuditEngagements => Set<AuditEngagement>();
+    public DbSet<AuditWorkpaper> AuditWorkpapers => Set<AuditWorkpaper>();
+    public DbSet<AuditFinding> AuditFindings => Set<AuditFinding>();
+    public DbSet<CorrectiveAction> CorrectiveActions => Set<CorrectiveAction>();
+    public DbSet<Issue> Issues => Set<Issue>();
+    public DbSet<BusinessUnit> BusinessUnits => Set<BusinessUnit>();
+    public DbSet<DataProcessingActivity> DataProcessingActivitys => Set<DataProcessingActivity>();
+    public DbSet<DataCategory> DataCategorys => Set<DataCategory>();
+    public DbSet<System_> System_s => Set<System_>();
+    public DbSet<PrivacyNotice> PrivacyNotices => Set<PrivacyNotice>();
+    public DbSet<DataSubjectRequest> DataSubjectRequests => Set<DataSubjectRequest>();
+    public DbSet<RecordsRepository> RecordsRepositorys => Set<RecordsRepository>();
+    public DbSet<Record_> Record_s => Set<Record_>();
+    public DbSet<RetentionSchedule> RetentionSchedules => Set<RetentionSchedule>();
+    public DbSet<DispositionReview> DispositionReviews => Set<DispositionReview>();
+    public DbSet<LegalHold> LegalHolds => Set<LegalHold>();
+    public DbSet<Matter> Matters => Set<Matter>();
+    public DbSet<ThirdParty> ThirdPartys => Set<ThirdParty>();
+    public DbSet<ThirdPartyAssessment> ThirdPartyAssessments => Set<ThirdPartyAssessment>();
+    public DbSet<Contract> Contracts => Set<Contract>();
+    public DbSet<Exception_> Exception_s => Set<Exception_>();
+    public DbSet<Consent> Consents => Set<Consent>();
+    public DbSet<DataBreach> DataBreachs => Set<DataBreach>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -62,67 +62,67 @@ public DbSet<DataBreach> DataBreachs => Set<DataBreach>();
         modelBuilder.Entity<GovernanceBody>()
             .HasOne<Organization>()
             .WithMany(parent => parent.GovernanceBodies)
-            .HasForeignKey("GovernanceBodies_Id");
+            .HasForeignKey("Organization_Id");
 
         // Organization has one or more Policies of type Policy
         modelBuilder.Entity<Policy>()
             .HasOne<Organization>()
             .WithMany(parent => parent.Policies)
-            .HasForeignKey("Policies_Id");
+            .HasForeignKey("Organization_Id");
 
         // Organization has one or more Risks of type Risk
         modelBuilder.Entity<Risk>()
             .HasOne<Organization>()
             .WithMany(parent => parent.Risks)
-            .HasForeignKey("Risks_Id");
+            .HasForeignKey("Organization_Id");
 
         // Organization has one or more ThirdParties of type ThirdParty
         modelBuilder.Entity<ThirdParty>()
             .HasOne<Organization>()
             .WithMany(parent => parent.ThirdParties)
-            .HasForeignKey("ThirdParties_Id");
+            .HasForeignKey("Organization_Id");
 
         // Organization has one or more RecordsRepositories of type RecordsRepository
         modelBuilder.Entity<RecordsRepository>()
             .HasOne<Organization>()
             .WithMany(parent => parent.RecordsRepositories)
-            .HasForeignKey("RecordsRepositories_Id");
+            .HasForeignKey("Organization_Id");
 
         // Organization has one or more DataProcessingActivities of type DataProcessingActivity
         modelBuilder.Entity<DataProcessingActivity>()
             .HasOne<Organization>()
             .WithMany(parent => parent.DataProcessingActivities)
-            .HasForeignKey("DataProcessingActivities_Id");
+            .HasForeignKey("Organization_Id");
 
         // Organization has one or more CompliancePrograms of type ComplianceProgram
         modelBuilder.Entity<ComplianceProgram>()
             .HasOne<Organization>()
             .WithMany(parent => parent.CompliancePrograms)
-            .HasForeignKey("CompliancePrograms_Id");
+            .HasForeignKey("Organization_Id");
 
         // Organization has one or more AuditPrograms of type AuditProgram
         modelBuilder.Entity<AuditProgram>()
             .HasOne<Organization>()
             .WithMany(parent => parent.AuditPrograms)
-            .HasForeignKey("AuditPrograms_Id");
+            .HasForeignKey("Organization_Id");
 
         // Organization has one or more BusinessUnits of type BusinessUnit
         modelBuilder.Entity<BusinessUnit>()
             .HasOne<Organization>()
             .WithMany(parent => parent.BusinessUnits)
-            .HasForeignKey("BusinessUnits_Id");
+            .HasForeignKey("Organization_Id");
 
         // Organization has one or more Matters of type Matter
         modelBuilder.Entity<Matter>()
             .HasOne<Organization>()
             .WithMany(parent => parent.Matters)
-            .HasForeignKey("Matters_Id");
+            .HasForeignKey("Organization_Id");
 
         // Organization has one or more DataBreaches of type DataBreach
         modelBuilder.Entity<DataBreach>()
             .HasOne<Organization>()
             .WithMany(parent => parent.DataBreaches)
-            .HasForeignKey("DataBreaches_Id");
+            .HasForeignKey("Organization_Id");
 
         // GovernanceBody has one Organization of type Organization
         modelBuilder.Entity<GovernanceBody>()
@@ -135,39 +135,39 @@ public DbSet<DataBreach> DataBreachs => Set<DataBreach>();
         modelBuilder.Entity<RoleAssignment>()
             .HasOne<GovernanceBody>()
             .WithMany(parent => parent.RoleAssignments)
-            .HasForeignKey("RoleAssignments_Id");
+            .HasForeignKey("GovernanceBody_Id");
 
         // GovernanceBody has one or more Policies of type Policy
         modelBuilder.Entity<Policy>()
             .HasOne<GovernanceBody>()
             .WithMany(parent => parent.Policies)
-            .HasForeignKey("Policies_Id");
+            .HasForeignKey("GovernanceBody_Id");
 
 
         // Person has one or more RoleAssignments of type RoleAssignment
         modelBuilder.Entity<RoleAssignment>()
             .HasOne<Person>()
             .WithMany(parent => parent.RoleAssignments)
-            .HasForeignKey("RoleAssignments_Id");
+            .HasForeignKey("Person_Id");
 
         // Person has one or more OwnedPolicies of type Policy
         modelBuilder.Entity<Policy>()
             .HasOne<Person>()
             .WithMany(parent => parent.OwnedPolicies)
-            .HasForeignKey("OwnedPolicies_Id");
+            .HasForeignKey("Person_Id");
 
         // Person has one or more CorrectiveActions of type CorrectiveAction
         modelBuilder.Entity<CorrectiveAction>()
             .HasOne<Person>()
             .WithMany(parent => parent.CorrectiveActions)
-            .HasForeignKey("CorrectiveActions_Id");
+            .HasForeignKey("Person_Id");
 
 
         // Role has one or more Assignments of type RoleAssignment
         modelBuilder.Entity<RoleAssignment>()
             .HasOne<Role>()
             .WithMany(parent => parent.Assignments)
-            .HasForeignKey("Assignments_Id");
+            .HasForeignKey("Role_Id");
 
         // RoleAssignment has one Person of type Person
         modelBuilder.Entity<RoleAssignment>()
@@ -205,37 +205,37 @@ public DbSet<DataBreach> DataBreachs => Set<DataBreach>();
         modelBuilder.Entity<Person>()
             .HasOne<Policy>()
             .WithMany(parent => parent.Owners)
-            .HasForeignKey("Owners_Id");
+            .HasForeignKey("Policy_Id");
 
         // Policy has one or more RelatedRequirements of type ComplianceRequirement
         modelBuilder.Entity<ComplianceRequirement>()
             .HasOne<Policy>()
             .WithMany(parent => parent.RelatedRequirements)
-            .HasForeignKey("RelatedRequirements_Id");
+            .HasForeignKey("Policy_Id");
 
         // Policy has one or more Controls of type Control
         modelBuilder.Entity<Control>()
             .HasOne<Policy>()
             .WithMany(parent => parent.Controls)
-            .HasForeignKey("Controls_Id");
+            .HasForeignKey("Policy_Id");
 
         // Policy has one or more Procedures of type Procedure
         modelBuilder.Entity<Procedure>()
             .HasOne<Policy>()
             .WithMany(parent => parent.Procedures)
-            .HasForeignKey("Procedures_Id");
+            .HasForeignKey("Policy_Id");
 
         // Policy has one or more Exceptions of type Exception_
         modelBuilder.Entity<Exception_>()
             .HasOne<Policy>()
             .WithMany(parent => parent.Exceptions)
-            .HasForeignKey("Exceptions_Id");
+            .HasForeignKey("Policy_Id");
 
         // Policy has one or more Attestations of type Attestation
         modelBuilder.Entity<Attestation>()
             .HasOne<Policy>()
             .WithMany(parent => parent.Attestations)
-            .HasForeignKey("Attestations_Id");
+            .HasForeignKey("Policy_Id");
 
         // Procedure has one Policy of type Policy
         modelBuilder.Entity<Procedure>()
@@ -248,20 +248,20 @@ public DbSet<DataBreach> DataBreachs => Set<DataBreach>();
         modelBuilder.Entity<Control>()
             .HasOne<Procedure>()
             .WithMany(parent => parent.Controls)
-            .HasForeignKey("Controls_Id");
+            .HasForeignKey("Procedure_Id");
 
 
         // Regulation has one or more Obligations of type Obligation
         modelBuilder.Entity<Obligation>()
             .HasOne<Regulation>()
             .WithMany(parent => parent.Obligations)
-            .HasForeignKey("Obligations_Id");
+            .HasForeignKey("Regulation_Id");
 
         // Regulation has one or more CompliancePrograms of type ComplianceProgram
         modelBuilder.Entity<ComplianceProgram>()
             .HasOne<Regulation>()
             .WithMany(parent => parent.CompliancePrograms)
-            .HasForeignKey("CompliancePrograms_Id");
+            .HasForeignKey("Regulation_Id");
 
         // Obligation has one Regulation of type Regulation
         modelBuilder.Entity<Obligation>()
@@ -274,19 +274,19 @@ public DbSet<DataBreach> DataBreachs => Set<DataBreach>();
         modelBuilder.Entity<Control>()
             .HasOne<Obligation>()
             .WithMany(parent => parent.Controls)
-            .HasForeignKey("Controls_Id");
+            .HasForeignKey("Obligation_Id");
 
         // Obligation has one or more Policies of type Policy
         modelBuilder.Entity<Policy>()
             .HasOne<Obligation>()
             .WithMany(parent => parent.Policies)
-            .HasForeignKey("Policies_Id");
+            .HasForeignKey("Obligation_Id");
 
         // Obligation has one or more Contracts of type Contract
         modelBuilder.Entity<Contract>()
             .HasOne<Obligation>()
             .WithMany(parent => parent.Contracts)
-            .HasForeignKey("Contracts_Id");
+            .HasForeignKey("Obligation_Id");
 
         // Control has one Policy of type Policy
         modelBuilder.Entity<Control>()
@@ -299,37 +299,37 @@ public DbSet<DataBreach> DataBreachs => Set<DataBreach>();
         modelBuilder.Entity<ControlTest_>()
             .HasOne<Control>()
             .WithMany(parent => parent.ControlTests)
-            .HasForeignKey("ControlTests_Id");
+            .HasForeignKey("Control_Id");
 
         // Control has one or more Evidence of type Evidence
         modelBuilder.Entity<Evidence>()
             .HasOne<Control>()
             .WithMany(parent => parent.Evidence)
-            .HasForeignKey("Evidence_Id");
+            .HasForeignKey("Control_Id");
 
         // Control has one or more Risks of type Risk
         modelBuilder.Entity<Risk>()
             .HasOne<Control>()
             .WithMany(parent => parent.Risks)
-            .HasForeignKey("Risks_Id");
+            .HasForeignKey("Control_Id");
 
         // Control has one or more Obligations of type Obligation
         modelBuilder.Entity<Obligation>()
             .HasOne<Control>()
             .WithMany(parent => parent.Obligations)
-            .HasForeignKey("Obligations_Id");
+            .HasForeignKey("Control_Id");
 
         // Control has one or more Procedures of type Procedure
         modelBuilder.Entity<Procedure>()
             .HasOne<Control>()
             .WithMany(parent => parent.Procedures)
-            .HasForeignKey("Procedures_Id");
+            .HasForeignKey("Control_Id");
 
         // Control has one or more Issues of type Issue
         modelBuilder.Entity<Issue>()
             .HasOne<Control>()
             .WithMany(parent => parent.Issues)
-            .HasForeignKey("Issues_Id");
+            .HasForeignKey("Control_Id");
 
         // ControlTest_ has one Control of type Control
         modelBuilder.Entity<ControlTest_>()
@@ -348,7 +348,7 @@ public DbSet<DataBreach> DataBreachs => Set<DataBreach>();
         modelBuilder.Entity<Evidence>()
             .HasOne<ControlTest_>()
             .WithMany(parent => parent.Evidence)
-            .HasForeignKey("Evidence_Id");
+            .HasForeignKey("ControlTest__Id");
 
         // Evidence has one ControlTest of type ControlTest_
         modelBuilder.Entity<Evidence>()
@@ -386,25 +386,25 @@ public DbSet<DataBreach> DataBreachs => Set<DataBreach>();
         modelBuilder.Entity<Control>()
             .HasOne<Risk>()
             .WithMany(parent => parent.Controls)
-            .HasForeignKey("Controls_Id");
+            .HasForeignKey("Risk_Id");
 
         // Risk has one or more Assessments of type RiskAssessment
         modelBuilder.Entity<RiskAssessment>()
             .HasOne<Risk>()
             .WithMany(parent => parent.Assessments)
-            .HasForeignKey("Assessments_Id");
+            .HasForeignKey("Risk_Id");
 
         // Risk has one or more Issues of type Issue
         modelBuilder.Entity<Issue>()
             .HasOne<Risk>()
             .WithMany(parent => parent.Issues)
-            .HasForeignKey("Issues_Id");
+            .HasForeignKey("Risk_Id");
 
         // Risk has one or more Findings of type AuditFinding
         modelBuilder.Entity<AuditFinding>()
             .HasOne<Risk>()
             .WithMany(parent => parent.Findings)
-            .HasForeignKey("Findings_Id");
+            .HasForeignKey("Risk_Id");
 
         // RiskAssessment has one Risk of type Risk
         modelBuilder.Entity<RiskAssessment>()
@@ -424,25 +424,25 @@ public DbSet<DataBreach> DataBreachs => Set<DataBreach>();
         modelBuilder.Entity<ComplianceRequirement>()
             .HasOne<ComplianceProgram>()
             .WithMany(parent => parent.Requirements)
-            .HasForeignKey("Requirements_Id");
+            .HasForeignKey("ComplianceProgram_Id");
 
         // ComplianceProgram has one or more Controls of type Control
         modelBuilder.Entity<Control>()
             .HasOne<ComplianceProgram>()
             .WithMany(parent => parent.Controls)
-            .HasForeignKey("Controls_Id");
+            .HasForeignKey("ComplianceProgram_Id");
 
         // ComplianceProgram has one or more Attestations of type Attestation
         modelBuilder.Entity<Attestation>()
             .HasOne<ComplianceProgram>()
             .WithMany(parent => parent.Attestations)
-            .HasForeignKey("Attestations_Id");
+            .HasForeignKey("ComplianceProgram_Id");
 
         // ComplianceProgram has one or more Regulations of type Regulation
         modelBuilder.Entity<Regulation>()
             .HasOne<ComplianceProgram>()
             .WithMany(parent => parent.Regulations)
-            .HasForeignKey("Regulations_Id");
+            .HasForeignKey("ComplianceProgram_Id");
 
         // ComplianceRequirement has one ComplianceProgram of type ComplianceProgram
         modelBuilder.Entity<ComplianceRequirement>()
@@ -455,19 +455,19 @@ public DbSet<DataBreach> DataBreachs => Set<DataBreach>();
         modelBuilder.Entity<Policy>()
             .HasOne<ComplianceRequirement>()
             .WithMany(parent => parent.Policies)
-            .HasForeignKey("Policies_Id");
+            .HasForeignKey("ComplianceRequirement_Id");
 
         // ComplianceRequirement has one or more Controls of type Control
         modelBuilder.Entity<Control>()
             .HasOne<ComplianceRequirement>()
             .WithMany(parent => parent.Controls)
-            .HasForeignKey("Controls_Id");
+            .HasForeignKey("ComplianceRequirement_Id");
 
         // ComplianceRequirement has one or more Obligations of type Obligation
         modelBuilder.Entity<Obligation>()
             .HasOne<ComplianceRequirement>()
             .WithMany(parent => parent.Obligations)
-            .HasForeignKey("Obligations_Id");
+            .HasForeignKey("ComplianceRequirement_Id");
 
         // Attestation has one Control of type Control
         modelBuilder.Entity<Attestation>()
@@ -499,7 +499,7 @@ public DbSet<DataBreach> DataBreachs => Set<DataBreach>();
         modelBuilder.Entity<AuditEngagement>()
             .HasOne<AuditProgram>()
             .WithMany(parent => parent.Engagements)
-            .HasForeignKey("Engagements_Id");
+            .HasForeignKey("AuditProgram_Id");
 
         // AuditEngagement has one AuditProgram of type AuditProgram
         modelBuilder.Entity<AuditEngagement>()
@@ -512,25 +512,25 @@ public DbSet<DataBreach> DataBreachs => Set<DataBreach>();
         modelBuilder.Entity<BusinessUnit>()
             .HasOne<AuditEngagement>()
             .WithMany(parent => parent.BusinessUnits)
-            .HasForeignKey("BusinessUnits_Id");
+            .HasForeignKey("AuditEngagement_Id");
 
         // AuditEngagement has one or more ControlTests of type ControlTest_
         modelBuilder.Entity<ControlTest_>()
             .HasOne<AuditEngagement>()
             .WithMany(parent => parent.ControlTests)
-            .HasForeignKey("ControlTests_Id");
+            .HasForeignKey("AuditEngagement_Id");
 
         // AuditEngagement has one or more Workpapers of type AuditWorkpaper
         modelBuilder.Entity<AuditWorkpaper>()
             .HasOne<AuditEngagement>()
             .WithMany(parent => parent.Workpapers)
-            .HasForeignKey("Workpapers_Id");
+            .HasForeignKey("AuditEngagement_Id");
 
         // AuditEngagement has one or more Findings of type AuditFinding
         modelBuilder.Entity<AuditFinding>()
             .HasOne<AuditEngagement>()
             .WithMany(parent => parent.Findings)
-            .HasForeignKey("Findings_Id");
+            .HasForeignKey("AuditEngagement_Id");
 
         // AuditWorkpaper has one Engagement of type AuditEngagement
         modelBuilder.Entity<AuditWorkpaper>()
@@ -543,13 +543,13 @@ public DbSet<DataBreach> DataBreachs => Set<DataBreach>();
         modelBuilder.Entity<Evidence>()
             .HasOne<AuditWorkpaper>()
             .WithMany(parent => parent.Evidence)
-            .HasForeignKey("Evidence_Id");
+            .HasForeignKey("AuditWorkpaper_Id");
 
         // AuditWorkpaper has one or more Findings of type AuditFinding
         modelBuilder.Entity<AuditFinding>()
             .HasOne<AuditWorkpaper>()
             .WithMany(parent => parent.Findings)
-            .HasForeignKey("Findings_Id");
+            .HasForeignKey("AuditWorkpaper_Id");
 
         // AuditFinding has one Engagement of type AuditEngagement
         modelBuilder.Entity<AuditFinding>()
@@ -568,25 +568,25 @@ public DbSet<DataBreach> DataBreachs => Set<DataBreach>();
         modelBuilder.Entity<CorrectiveAction>()
             .HasOne<AuditFinding>()
             .WithMany(parent => parent.CorrectiveActions)
-            .HasForeignKey("CorrectiveActions_Id");
+            .HasForeignKey("AuditFinding_Id");
 
         // AuditFinding has one or more RelatedRisks of type Risk
         modelBuilder.Entity<Risk>()
             .HasOne<AuditFinding>()
             .WithMany(parent => parent.RelatedRisks)
-            .HasForeignKey("RelatedRisks_Id");
+            .HasForeignKey("AuditFinding_Id");
 
         // AuditFinding has one or more RelatedControls of type Control
         modelBuilder.Entity<Control>()
             .HasOne<AuditFinding>()
             .WithMany(parent => parent.RelatedControls)
-            .HasForeignKey("RelatedControls_Id");
+            .HasForeignKey("AuditFinding_Id");
 
         // AuditFinding has one or more Issues of type Issue
         modelBuilder.Entity<Issue>()
             .HasOne<AuditFinding>()
             .WithMany(parent => parent.Issues)
-            .HasForeignKey("Issues_Id");
+            .HasForeignKey("AuditFinding_Id");
 
         // CorrectiveAction has one Finding of type AuditFinding
         modelBuilder.Entity<CorrectiveAction>()
@@ -624,7 +624,7 @@ public DbSet<DataBreach> DataBreachs => Set<DataBreach>();
         modelBuilder.Entity<CorrectiveAction>()
             .HasOne<Issue>()
             .WithMany(parent => parent.CorrectiveActions)
-            .HasForeignKey("CorrectiveActions_Id");
+            .HasForeignKey("Issue_Id");
 
         // BusinessUnit has one Organization of type Organization
         modelBuilder.Entity<BusinessUnit>()
@@ -637,7 +637,7 @@ public DbSet<DataBreach> DataBreachs => Set<DataBreach>();
         modelBuilder.Entity<AuditEngagement>()
             .HasOne<BusinessUnit>()
             .WithMany(parent => parent.Audits)
-            .HasForeignKey("Audits_Id");
+            .HasForeignKey("BusinessUnit_Id");
 
         // DataProcessingActivity has one Organization of type Organization
         modelBuilder.Entity<DataProcessingActivity>()
@@ -650,81 +650,81 @@ public DbSet<DataBreach> DataBreachs => Set<DataBreach>();
         modelBuilder.Entity<DataCategory>()
             .HasOne<DataProcessingActivity>()
             .WithMany(parent => parent.DataCategories)
-            .HasForeignKey("DataCategories_Id");
+            .HasForeignKey("DataProcessingActivity_Id");
 
         // DataProcessingActivity has one or more Systems of type System_
         modelBuilder.Entity<System_>()
             .HasOne<DataProcessingActivity>()
             .WithMany(parent => parent.Systems)
-            .HasForeignKey("Systems_Id");
+            .HasForeignKey("DataProcessingActivity_Id");
 
         // DataProcessingActivity has one or more Records of type Record_
         modelBuilder.Entity<Record_>()
             .HasOne<DataProcessingActivity>()
             .WithMany(parent => parent.Records)
-            .HasForeignKey("Records_Id");
+            .HasForeignKey("DataProcessingActivity_Id");
 
         // DataProcessingActivity has one or more PrivacyNotices of type PrivacyNotice
         modelBuilder.Entity<PrivacyNotice>()
             .HasOne<DataProcessingActivity>()
             .WithMany(parent => parent.PrivacyNotices)
-            .HasForeignKey("PrivacyNotices_Id");
+            .HasForeignKey("DataProcessingActivity_Id");
 
         // DataProcessingActivity has one or more ThirdParties of type ThirdParty
         modelBuilder.Entity<ThirdParty>()
             .HasOne<DataProcessingActivity>()
             .WithMany(parent => parent.ThirdParties)
-            .HasForeignKey("ThirdParties_Id");
+            .HasForeignKey("DataProcessingActivity_Id");
 
         // DataProcessingActivity has one or more Consents of type Consent
         modelBuilder.Entity<Consent>()
             .HasOne<DataProcessingActivity>()
             .WithMany(parent => parent.Consents)
-            .HasForeignKey("Consents_Id");
+            .HasForeignKey("DataProcessingActivity_Id");
 
         // DataProcessingActivity has one or more DataBreaches of type DataBreach
         modelBuilder.Entity<DataBreach>()
             .HasOne<DataProcessingActivity>()
             .WithMany(parent => parent.DataBreaches)
-            .HasForeignKey("DataBreaches_Id");
+            .HasForeignKey("DataProcessingActivity_Id");
 
         // DataProcessingActivity has one or more DataSubjectRequests of type DataSubjectRequest
         modelBuilder.Entity<DataSubjectRequest>()
             .HasOne<DataProcessingActivity>()
             .WithMany(parent => parent.DataSubjectRequests)
-            .HasForeignKey("DataSubjectRequests_Id");
+            .HasForeignKey("DataProcessingActivity_Id");
 
 
         // DataCategory has one or more ProcessingActivities of type DataProcessingActivity
         modelBuilder.Entity<DataProcessingActivity>()
             .HasOne<DataCategory>()
             .WithMany(parent => parent.ProcessingActivities)
-            .HasForeignKey("ProcessingActivities_Id");
+            .HasForeignKey("DataCategory_Id");
 
         // DataCategory has one or more Records of type Record_
         modelBuilder.Entity<Record_>()
             .HasOne<DataCategory>()
             .WithMany(parent => parent.Records)
-            .HasForeignKey("Records_Id");
+            .HasForeignKey("DataCategory_Id");
 
         // DataCategory has one or more DataBreaches of type DataBreach
         modelBuilder.Entity<DataBreach>()
             .HasOne<DataCategory>()
             .WithMany(parent => parent.DataBreaches)
-            .HasForeignKey("DataBreaches_Id");
+            .HasForeignKey("DataCategory_Id");
 
 
         // System_ has one or more ProcessingActivities of type DataProcessingActivity
         modelBuilder.Entity<DataProcessingActivity>()
             .HasOne<System_>()
             .WithMany(parent => parent.ProcessingActivities)
-            .HasForeignKey("ProcessingActivities_Id");
+            .HasForeignKey("System__Id");
 
         // System_ has one or more RecordsRepositories of type RecordsRepository
         modelBuilder.Entity<RecordsRepository>()
             .HasOne<System_>()
             .WithMany(parent => parent.RecordsRepositories)
-            .HasForeignKey("RecordsRepositories_Id");
+            .HasForeignKey("System__Id");
 
         // PrivacyNotice has one Organization of type Organization
         modelBuilder.Entity<PrivacyNotice>()
@@ -737,13 +737,13 @@ public DbSet<DataBreach> DataBreachs => Set<DataBreach>();
         modelBuilder.Entity<DataProcessingActivity>()
             .HasOne<PrivacyNotice>()
             .WithMany(parent => parent.ProcessingActivities)
-            .HasForeignKey("ProcessingActivities_Id");
+            .HasForeignKey("PrivacyNotice_Id");
 
         // PrivacyNotice has one or more Consents of type Consent
         modelBuilder.Entity<Consent>()
             .HasOne<PrivacyNotice>()
             .WithMany(parent => parent.Consents)
-            .HasForeignKey("Consents_Id");
+            .HasForeignKey("PrivacyNotice_Id");
 
         // DataSubjectRequest has one Organization of type Organization
         modelBuilder.Entity<DataSubjectRequest>()
@@ -756,13 +756,13 @@ public DbSet<DataBreach> DataBreachs => Set<DataBreach>();
         modelBuilder.Entity<DataProcessingActivity>()
             .HasOne<DataSubjectRequest>()
             .WithMany(parent => parent.ProcessingActivities)
-            .HasForeignKey("ProcessingActivities_Id");
+            .HasForeignKey("DataSubjectRequest_Id");
 
         // DataSubjectRequest has one or more Records of type Record_
         modelBuilder.Entity<Record_>()
             .HasOne<DataSubjectRequest>()
             .WithMany(parent => parent.Records)
-            .HasForeignKey("Records_Id");
+            .HasForeignKey("DataSubjectRequest_Id");
 
         // RecordsRepository has one Organization of type Organization
         modelBuilder.Entity<RecordsRepository>()
@@ -775,25 +775,25 @@ public DbSet<DataBreach> DataBreachs => Set<DataBreach>();
         modelBuilder.Entity<Record_>()
             .HasOne<RecordsRepository>()
             .WithMany(parent => parent.Records)
-            .HasForeignKey("Records_Id");
+            .HasForeignKey("RecordsRepository_Id");
 
         // RecordsRepository has one or more Systems of type System_
         modelBuilder.Entity<System_>()
             .HasOne<RecordsRepository>()
             .WithMany(parent => parent.Systems)
-            .HasForeignKey("Systems_Id");
+            .HasForeignKey("RecordsRepository_Id");
 
         // RecordsRepository has one or more RetentionSchedules of type RetentionSchedule
         modelBuilder.Entity<RetentionSchedule>()
             .HasOne<RecordsRepository>()
             .WithMany(parent => parent.RetentionSchedules)
-            .HasForeignKey("RetentionSchedules_Id");
+            .HasForeignKey("RecordsRepository_Id");
 
         // RecordsRepository has one or more LegalHolds of type LegalHold
         modelBuilder.Entity<LegalHold>()
             .HasOne<RecordsRepository>()
             .WithMany(parent => parent.LegalHolds)
-            .HasForeignKey("LegalHolds_Id");
+            .HasForeignKey("RecordsRepository_Id");
 
         // Record_ has one Repository of type RecordsRepository
         modelBuilder.Entity<Record_>()
@@ -812,50 +812,50 @@ public DbSet<DataBreach> DataBreachs => Set<DataBreach>();
         modelBuilder.Entity<DataProcessingActivity>()
             .HasOne<Record_>()
             .WithMany(parent => parent.ProcessingActivities)
-            .HasForeignKey("ProcessingActivities_Id");
+            .HasForeignKey("Record__Id");
 
         // Record_ has one or more DataCategories of type DataCategory
         modelBuilder.Entity<DataCategory>()
             .HasOne<Record_>()
             .WithMany(parent => parent.DataCategories)
-            .HasForeignKey("DataCategories_Id");
+            .HasForeignKey("Record__Id");
 
         // Record_ has one or more LegalHolds of type LegalHold
         modelBuilder.Entity<LegalHold>()
             .HasOne<Record_>()
             .WithMany(parent => parent.LegalHolds)
-            .HasForeignKey("LegalHolds_Id");
+            .HasForeignKey("Record__Id");
 
         // Record_ has one or more DataSubjectRequests of type DataSubjectRequest
         modelBuilder.Entity<DataSubjectRequest>()
             .HasOne<Record_>()
             .WithMany(parent => parent.DataSubjectRequests)
-            .HasForeignKey("DataSubjectRequests_Id");
+            .HasForeignKey("Record__Id");
 
 
         // RetentionSchedule has one or more Repositories of type RecordsRepository
         modelBuilder.Entity<RecordsRepository>()
             .HasOne<RetentionSchedule>()
             .WithMany(parent => parent.Repositories)
-            .HasForeignKey("Repositories_Id");
+            .HasForeignKey("RetentionSchedule_Id");
 
         // RetentionSchedule has one or more Records of type Record_
         modelBuilder.Entity<Record_>()
             .HasOne<RetentionSchedule>()
             .WithMany(parent => parent.Records)
-            .HasForeignKey("Records_Id");
+            .HasForeignKey("RetentionSchedule_Id");
 
         // RetentionSchedule has one or more Exceptions of type Exception_
         modelBuilder.Entity<Exception_>()
             .HasOne<RetentionSchedule>()
             .WithMany(parent => parent.Exceptions)
-            .HasForeignKey("Exceptions_Id");
+            .HasForeignKey("RetentionSchedule_Id");
 
         // RetentionSchedule has one or more DispositionReviews of type DispositionReview
         modelBuilder.Entity<DispositionReview>()
             .HasOne<RetentionSchedule>()
             .WithMany(parent => parent.DispositionReviews)
-            .HasForeignKey("DispositionReviews_Id");
+            .HasForeignKey("RetentionSchedule_Id");
 
         // DispositionReview has one Record of type Record_
         modelBuilder.Entity<DispositionReview>()
@@ -881,13 +881,13 @@ public DbSet<DataBreach> DataBreachs => Set<DataBreach>();
         modelBuilder.Entity<RecordsRepository>()
             .HasOne<LegalHold>()
             .WithMany(parent => parent.Repositories)
-            .HasForeignKey("Repositories_Id");
+            .HasForeignKey("LegalHold_Id");
 
         // LegalHold has one or more Records of type Record_
         modelBuilder.Entity<Record_>()
             .HasOne<LegalHold>()
             .WithMany(parent => parent.Records)
-            .HasForeignKey("Records_Id");
+            .HasForeignKey("LegalHold_Id");
 
         // Matter has one Organization of type Organization
         modelBuilder.Entity<Matter>()
@@ -900,19 +900,19 @@ public DbSet<DataBreach> DataBreachs => Set<DataBreach>();
         modelBuilder.Entity<LegalHold>()
             .HasOne<Matter>()
             .WithMany(parent => parent.LegalHolds)
-            .HasForeignKey("LegalHolds_Id");
+            .HasForeignKey("Matter_Id");
 
         // Matter has one or more DataBreaches of type DataBreach
         modelBuilder.Entity<DataBreach>()
             .HasOne<Matter>()
             .WithMany(parent => parent.DataBreaches)
-            .HasForeignKey("DataBreaches_Id");
+            .HasForeignKey("Matter_Id");
 
         // Matter has one or more Contracts of type Contract
         modelBuilder.Entity<Contract>()
             .HasOne<Matter>()
             .WithMany(parent => parent.Contracts)
-            .HasForeignKey("Contracts_Id");
+            .HasForeignKey("Matter_Id");
 
         // ThirdParty has one Organization of type Organization
         modelBuilder.Entity<ThirdParty>()
@@ -925,31 +925,31 @@ public DbSet<DataBreach> DataBreachs => Set<DataBreach>();
         modelBuilder.Entity<DataProcessingActivity>()
             .HasOne<ThirdParty>()
             .WithMany(parent => parent.ProcessingActivities)
-            .HasForeignKey("ProcessingActivities_Id");
+            .HasForeignKey("ThirdParty_Id");
 
         // ThirdParty has one or more Assessments of type ThirdPartyAssessment
         modelBuilder.Entity<ThirdPartyAssessment>()
             .HasOne<ThirdParty>()
             .WithMany(parent => parent.Assessments)
-            .HasForeignKey("Assessments_Id");
+            .HasForeignKey("ThirdParty_Id");
 
         // ThirdParty has one or more Contracts of type Contract
         modelBuilder.Entity<Contract>()
             .HasOne<ThirdParty>()
             .WithMany(parent => parent.Contracts)
-            .HasForeignKey("Contracts_Id");
+            .HasForeignKey("ThirdParty_Id");
 
         // ThirdParty has one or more Obligations of type Obligation
         modelBuilder.Entity<Obligation>()
             .HasOne<ThirdParty>()
             .WithMany(parent => parent.Obligations)
-            .HasForeignKey("Obligations_Id");
+            .HasForeignKey("ThirdParty_Id");
 
         // ThirdParty has one or more DataBreaches of type DataBreach
         modelBuilder.Entity<DataBreach>()
             .HasOne<ThirdParty>()
             .WithMany(parent => parent.DataBreaches)
-            .HasForeignKey("DataBreaches_Id");
+            .HasForeignKey("ThirdParty_Id");
 
         // ThirdPartyAssessment has one ThirdParty of type ThirdParty
         modelBuilder.Entity<ThirdPartyAssessment>()
@@ -962,7 +962,7 @@ public DbSet<DataBreach> DataBreachs => Set<DataBreach>();
         modelBuilder.Entity<Issue>()
             .HasOne<ThirdPartyAssessment>()
             .WithMany(parent => parent.Issues)
-            .HasForeignKey("Issues_Id");
+            .HasForeignKey("ThirdPartyAssessment_Id");
 
         // Contract has one ThirdParty of type ThirdParty
         modelBuilder.Entity<Contract>()
@@ -981,13 +981,13 @@ public DbSet<DataBreach> DataBreachs => Set<DataBreach>();
         modelBuilder.Entity<Obligation>()
             .HasOne<Contract>()
             .WithMany(parent => parent.Obligations)
-            .HasForeignKey("Obligations_Id");
+            .HasForeignKey("Contract_Id");
 
         // Contract has one or more DataProcessingActivities of type DataProcessingActivity
         modelBuilder.Entity<DataProcessingActivity>()
             .HasOne<Contract>()
             .WithMany(parent => parent.DataProcessingActivities)
-            .HasForeignKey("DataProcessingActivities_Id");
+            .HasForeignKey("Contract_Id");
 
         // Exception_ has one RetentionSchedule of type RetentionSchedule
         modelBuilder.Entity<Exception_>()
@@ -1025,7 +1025,7 @@ public DbSet<DataBreach> DataBreachs => Set<DataBreach>();
         modelBuilder.Entity<DataProcessingActivity>()
             .HasOne<Consent>()
             .WithMany(parent => parent.ProcessingActivities)
-            .HasForeignKey("ProcessingActivities_Id");
+            .HasForeignKey("Consent_Id");
 
         // DataBreach has one Organization of type Organization
         modelBuilder.Entity<DataBreach>()
@@ -1044,19 +1044,19 @@ public DbSet<DataBreach> DataBreachs => Set<DataBreach>();
         modelBuilder.Entity<DataProcessingActivity>()
             .HasOne<DataBreach>()
             .WithMany(parent => parent.ProcessingActivities)
-            .HasForeignKey("ProcessingActivities_Id");
+            .HasForeignKey("DataBreach_Id");
 
         // DataBreach has one or more DataCategories of type DataCategory
         modelBuilder.Entity<DataCategory>()
             .HasOne<DataBreach>()
             .WithMany(parent => parent.DataCategories)
-            .HasForeignKey("DataCategories_Id");
+            .HasForeignKey("DataBreach_Id");
 
         // DataBreach has one or more ThirdParties of type ThirdParty
         modelBuilder.Entity<ThirdParty>()
             .HasOne<DataBreach>()
             .WithMany(parent => parent.ThirdParties)
-            .HasForeignKey("ThirdParties_Id");
+            .HasForeignKey("DataBreach_Id");
 
     }
 }

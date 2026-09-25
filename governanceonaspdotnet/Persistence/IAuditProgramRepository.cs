@@ -1,4 +1,5 @@
 using governanceonaspdotnet.Domain;
+using governanceonaspdotnet.Contracts;
 
 namespace governanceonaspdotnet.Persistence;
 
@@ -9,4 +10,8 @@ public interface IAuditProgramRepository
     Task AddAsync(AuditProgram auditProgram, CancellationToken cancellationToken);
     Task UpdateAsync(AuditProgram auditProgram, CancellationToken cancellationToken);
     Task DeleteAsync(AuditProgram auditProgram, CancellationToken cancellationToken);
+
+    Task AddToEngagementsAsync( MultipleAssociationRequest request, CancellationToken cancellationToken);
+    Task RemoveFromEngagementsAsync( MultipleAssociationRequest request, CancellationToken cancellationToken);
+
 }

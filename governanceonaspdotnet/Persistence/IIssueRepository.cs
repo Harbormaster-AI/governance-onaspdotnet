@@ -1,4 +1,5 @@
 using governanceonaspdotnet.Domain;
+using governanceonaspdotnet.Contracts;
 
 namespace governanceonaspdotnet.Persistence;
 
@@ -9,4 +10,8 @@ public interface IIssueRepository
     Task AddAsync(Issue issue, CancellationToken cancellationToken);
     Task UpdateAsync(Issue issue, CancellationToken cancellationToken);
     Task DeleteAsync(Issue issue, CancellationToken cancellationToken);
+
+    Task AddToCorrectiveActionsAsync( MultipleAssociationRequest request, CancellationToken cancellationToken);
+    Task RemoveFromCorrectiveActionsAsync( MultipleAssociationRequest request, CancellationToken cancellationToken);
+
 }

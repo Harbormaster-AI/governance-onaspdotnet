@@ -1,4 +1,5 @@
 using governanceonaspdotnet.Domain;
+using governanceonaspdotnet.Contracts;
 
 namespace governanceonaspdotnet.Persistence;
 
@@ -9,4 +10,6 @@ public interface IRoleAssignmentRepository
     Task AddAsync(RoleAssignment roleAssignment, CancellationToken cancellationToken);
     Task UpdateAsync(RoleAssignment roleAssignment, CancellationToken cancellationToken);
     Task DeleteAsync(RoleAssignment roleAssignment, CancellationToken cancellationToken);
+
+
 }

@@ -1,4 +1,5 @@
 using governanceonaspdotnet.Domain;
+using governanceonaspdotnet.Contracts;
 
 namespace governanceonaspdotnet.Persistence;
 
@@ -9,4 +10,8 @@ public interface IControlTest_Repository
     Task AddAsync(ControlTest_ controlTest_, CancellationToken cancellationToken);
     Task UpdateAsync(ControlTest_ controlTest_, CancellationToken cancellationToken);
     Task DeleteAsync(ControlTest_ controlTest_, CancellationToken cancellationToken);
+
+    Task AddToEvidenceAsync( MultipleAssociationRequest request, CancellationToken cancellationToken);
+    Task RemoveFromEvidenceAsync( MultipleAssociationRequest request, CancellationToken cancellationToken);
+
 }

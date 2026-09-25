@@ -1,4 +1,5 @@
 using governanceonaspdotnet.Domain;
+using governanceonaspdotnet.Contracts;
 
 namespace governanceonaspdotnet.Persistence;
 
@@ -9,4 +10,6 @@ public interface ICorrectiveActionRepository
     Task AddAsync(CorrectiveAction correctiveAction, CancellationToken cancellationToken);
     Task UpdateAsync(CorrectiveAction correctiveAction, CancellationToken cancellationToken);
     Task DeleteAsync(CorrectiveAction correctiveAction, CancellationToken cancellationToken);
+
+
 }

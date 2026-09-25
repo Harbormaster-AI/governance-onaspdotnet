@@ -1,7 +1,8 @@
 using governanceonaspdotnet.Api;
 using governanceonaspdotnet.Persistence;
 using governanceonaspdotnet.Service;
-
+using governanceonaspdotnet.Telemetry;
+using OpenTelemetry.Metrics;
 using Microsoft.EntityFrameworkCore;
 using Oracle.EntityFrameworkCore;
 
@@ -11,7 +12,6 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddOpenApi();
 builder.Services.AddHealthChecks()
     .AddDbContextCheck<ApplicationDbContext>();
-
 
 var dbEngineEnvironment = builder.Configuration["DB_TYPE"];
 
@@ -113,91 +113,108 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     // etc.
 });
 
-builder.Services.AddScoped<IOrganizationRepository, OrganizationRepository>();
-builder.Services.AddScoped<IGovernanceBodyRepository, GovernanceBodyRepository>();
-builder.Services.AddScoped<IPersonRepository, PersonRepository>();
-builder.Services.AddScoped<IRoleRepository, RoleRepository>();
-builder.Services.AddScoped<IRoleAssignmentRepository, RoleAssignmentRepository>();
-builder.Services.AddScoped<IPolicyRepository, PolicyRepository>();
-builder.Services.AddScoped<IProcedureRepository, ProcedureRepository>();
-builder.Services.AddScoped<IRegulationRepository, RegulationRepository>();
-builder.Services.AddScoped<IObligationRepository, ObligationRepository>();
-builder.Services.AddScoped<IControlRepository, ControlRepository>();
-builder.Services.AddScoped<IControlTest_Repository, ControlTest_Repository>();
-builder.Services.AddScoped<IEvidenceRepository, EvidenceRepository>();
-builder.Services.AddScoped<IRiskRepository, RiskRepository>();
-builder.Services.AddScoped<IRiskAssessmentRepository, RiskAssessmentRepository>();
-builder.Services.AddScoped<IComplianceProgramRepository, ComplianceProgramRepository>();
-builder.Services.AddScoped<IComplianceRequirementRepository, ComplianceRequirementRepository>();
-builder.Services.AddScoped<IAttestationRepository, AttestationRepository>();
-builder.Services.AddScoped<IAuditProgramRepository, AuditProgramRepository>();
-builder.Services.AddScoped<IAuditEngagementRepository, AuditEngagementRepository>();
-builder.Services.AddScoped<IAuditWorkpaperRepository, AuditWorkpaperRepository>();
-builder.Services.AddScoped<IAuditFindingRepository, AuditFindingRepository>();
-builder.Services.AddScoped<ICorrectiveActionRepository, CorrectiveActionRepository>();
-builder.Services.AddScoped<IIssueRepository, IssueRepository>();
-builder.Services.AddScoped<IBusinessUnitRepository, BusinessUnitRepository>();
-builder.Services.AddScoped<IDataProcessingActivityRepository, DataProcessingActivityRepository>();
-builder.Services.AddScoped<IDataCategoryRepository, DataCategoryRepository>();
-builder.Services.AddScoped<ISystem_Repository, System_Repository>();
-builder.Services.AddScoped<IPrivacyNoticeRepository, PrivacyNoticeRepository>();
-builder.Services.AddScoped<IDataSubjectRequestRepository, DataSubjectRequestRepository>();
-builder.Services.AddScoped<IRecordsRepositoryRepository, RecordsRepositoryRepository>();
-builder.Services.AddScoped<IRecord_Repository, Record_Repository>();
-builder.Services.AddScoped<IRetentionScheduleRepository, RetentionScheduleRepository>();
-builder.Services.AddScoped<IDispositionReviewRepository, DispositionReviewRepository>();
-builder.Services.AddScoped<ILegalHoldRepository, LegalHoldRepository>();
-builder.Services.AddScoped<IMatterRepository, MatterRepository>();
-builder.Services.AddScoped<IThirdPartyRepository, ThirdPartyRepository>();
-builder.Services.AddScoped<IThirdPartyAssessmentRepository, ThirdPartyAssessmentRepository>();
-builder.Services.AddScoped<IContractRepository, ContractRepository>();
-builder.Services.AddScoped<IException_Repository, Exception_Repository>();
-builder.Services.AddScoped<IConsentRepository, ConsentRepository>();
-builder.Services.AddScoped<IDataBreachRepository, DataBreachRepository>();
+    builder.Services.AddScoped<IOrganizationRepository, OrganizationRepository>();
+    builder.Services.AddScoped<IGovernanceBodyRepository, GovernanceBodyRepository>();
+    builder.Services.AddScoped<IPersonRepository, PersonRepository>();
+    builder.Services.AddScoped<IRoleRepository, RoleRepository>();
+    builder.Services.AddScoped<IRoleAssignmentRepository, RoleAssignmentRepository>();
+    builder.Services.AddScoped<IPolicyRepository, PolicyRepository>();
+    builder.Services.AddScoped<IProcedureRepository, ProcedureRepository>();
+    builder.Services.AddScoped<IRegulationRepository, RegulationRepository>();
+    builder.Services.AddScoped<IObligationRepository, ObligationRepository>();
+    builder.Services.AddScoped<IControlRepository, ControlRepository>();
+    builder.Services.AddScoped<IControlTest_Repository, ControlTest_Repository>();
+    builder.Services.AddScoped<IEvidenceRepository, EvidenceRepository>();
+    builder.Services.AddScoped<IRiskRepository, RiskRepository>();
+    builder.Services.AddScoped<IRiskAssessmentRepository, RiskAssessmentRepository>();
+    builder.Services.AddScoped<IComplianceProgramRepository, ComplianceProgramRepository>();
+    builder.Services.AddScoped<IComplianceRequirementRepository, ComplianceRequirementRepository>();
+    builder.Services.AddScoped<IAttestationRepository, AttestationRepository>();
+    builder.Services.AddScoped<IAuditProgramRepository, AuditProgramRepository>();
+    builder.Services.AddScoped<IAuditEngagementRepository, AuditEngagementRepository>();
+    builder.Services.AddScoped<IAuditWorkpaperRepository, AuditWorkpaperRepository>();
+    builder.Services.AddScoped<IAuditFindingRepository, AuditFindingRepository>();
+    builder.Services.AddScoped<ICorrectiveActionRepository, CorrectiveActionRepository>();
+    builder.Services.AddScoped<IIssueRepository, IssueRepository>();
+    builder.Services.AddScoped<IBusinessUnitRepository, BusinessUnitRepository>();
+    builder.Services.AddScoped<IDataProcessingActivityRepository, DataProcessingActivityRepository>();
+    builder.Services.AddScoped<IDataCategoryRepository, DataCategoryRepository>();
+    builder.Services.AddScoped<ISystem_Repository, System_Repository>();
+    builder.Services.AddScoped<IPrivacyNoticeRepository, PrivacyNoticeRepository>();
+    builder.Services.AddScoped<IDataSubjectRequestRepository, DataSubjectRequestRepository>();
+    builder.Services.AddScoped<IRecordsRepositoryRepository, RecordsRepositoryRepository>();
+    builder.Services.AddScoped<IRecord_Repository, Record_Repository>();
+    builder.Services.AddScoped<IRetentionScheduleRepository, RetentionScheduleRepository>();
+    builder.Services.AddScoped<IDispositionReviewRepository, DispositionReviewRepository>();
+    builder.Services.AddScoped<ILegalHoldRepository, LegalHoldRepository>();
+    builder.Services.AddScoped<IMatterRepository, MatterRepository>();
+    builder.Services.AddScoped<IThirdPartyRepository, ThirdPartyRepository>();
+    builder.Services.AddScoped<IThirdPartyAssessmentRepository, ThirdPartyAssessmentRepository>();
+    builder.Services.AddScoped<IContractRepository, ContractRepository>();
+    builder.Services.AddScoped<IException_Repository, Exception_Repository>();
+    builder.Services.AddScoped<IConsentRepository, ConsentRepository>();
+    builder.Services.AddScoped<IDataBreachRepository, DataBreachRepository>();
 
-builder.Services.AddScoped<IOrganizationService, OrganizationService>();
-builder.Services.AddScoped<IGovernanceBodyService, GovernanceBodyService>();
-builder.Services.AddScoped<IPersonService, PersonService>();
-builder.Services.AddScoped<IRoleService, RoleService>();
-builder.Services.AddScoped<IRoleAssignmentService, RoleAssignmentService>();
-builder.Services.AddScoped<IPolicyService, PolicyService>();
-builder.Services.AddScoped<IProcedureService, ProcedureService>();
-builder.Services.AddScoped<IRegulationService, RegulationService>();
-builder.Services.AddScoped<IObligationService, ObligationService>();
-builder.Services.AddScoped<IControlService, ControlService>();
-builder.Services.AddScoped<IControlTest_Service, ControlTest_Service>();
-builder.Services.AddScoped<IEvidenceService, EvidenceService>();
-builder.Services.AddScoped<IRiskService, RiskService>();
-builder.Services.AddScoped<IRiskAssessmentService, RiskAssessmentService>();
-builder.Services.AddScoped<IComplianceProgramService, ComplianceProgramService>();
-builder.Services.AddScoped<IComplianceRequirementService, ComplianceRequirementService>();
-builder.Services.AddScoped<IAttestationService, AttestationService>();
-builder.Services.AddScoped<IAuditProgramService, AuditProgramService>();
-builder.Services.AddScoped<IAuditEngagementService, AuditEngagementService>();
-builder.Services.AddScoped<IAuditWorkpaperService, AuditWorkpaperService>();
-builder.Services.AddScoped<IAuditFindingService, AuditFindingService>();
-builder.Services.AddScoped<ICorrectiveActionService, CorrectiveActionService>();
-builder.Services.AddScoped<IIssueService, IssueService>();
-builder.Services.AddScoped<IBusinessUnitService, BusinessUnitService>();
-builder.Services.AddScoped<IDataProcessingActivityService, DataProcessingActivityService>();
-builder.Services.AddScoped<IDataCategoryService, DataCategoryService>();
-builder.Services.AddScoped<ISystem_Service, System_Service>();
-builder.Services.AddScoped<IPrivacyNoticeService, PrivacyNoticeService>();
-builder.Services.AddScoped<IDataSubjectRequestService, DataSubjectRequestService>();
-builder.Services.AddScoped<IRecordsRepositoryService, RecordsRepositoryService>();
-builder.Services.AddScoped<IRecord_Service, Record_Service>();
-builder.Services.AddScoped<IRetentionScheduleService, RetentionScheduleService>();
-builder.Services.AddScoped<IDispositionReviewService, DispositionReviewService>();
-builder.Services.AddScoped<ILegalHoldService, LegalHoldService>();
-builder.Services.AddScoped<IMatterService, MatterService>();
-builder.Services.AddScoped<IThirdPartyService, ThirdPartyService>();
-builder.Services.AddScoped<IThirdPartyAssessmentService, ThirdPartyAssessmentService>();
-builder.Services.AddScoped<IContractService, ContractService>();
-builder.Services.AddScoped<IException_Service, Exception_Service>();
-builder.Services.AddScoped<IConsentService, ConsentService>();
-builder.Services.AddScoped<IDataBreachService, DataBreachService>();
+    builder.Services.AddScoped<IOrganizationService, OrganizationService>();
+    builder.Services.AddScoped<IGovernanceBodyService, GovernanceBodyService>();
+    builder.Services.AddScoped<IPersonService, PersonService>();
+    builder.Services.AddScoped<IRoleService, RoleService>();
+    builder.Services.AddScoped<IRoleAssignmentService, RoleAssignmentService>();
+    builder.Services.AddScoped<IPolicyService, PolicyService>();
+    builder.Services.AddScoped<IProcedureService, ProcedureService>();
+    builder.Services.AddScoped<IRegulationService, RegulationService>();
+    builder.Services.AddScoped<IObligationService, ObligationService>();
+    builder.Services.AddScoped<IControlService, ControlService>();
+    builder.Services.AddScoped<IControlTest_Service, ControlTest_Service>();
+    builder.Services.AddScoped<IEvidenceService, EvidenceService>();
+    builder.Services.AddScoped<IRiskService, RiskService>();
+    builder.Services.AddScoped<IRiskAssessmentService, RiskAssessmentService>();
+    builder.Services.AddScoped<IComplianceProgramService, ComplianceProgramService>();
+    builder.Services.AddScoped<IComplianceRequirementService, ComplianceRequirementService>();
+    builder.Services.AddScoped<IAttestationService, AttestationService>();
+    builder.Services.AddScoped<IAuditProgramService, AuditProgramService>();
+    builder.Services.AddScoped<IAuditEngagementService, AuditEngagementService>();
+    builder.Services.AddScoped<IAuditWorkpaperService, AuditWorkpaperService>();
+    builder.Services.AddScoped<IAuditFindingService, AuditFindingService>();
+    builder.Services.AddScoped<ICorrectiveActionService, CorrectiveActionService>();
+    builder.Services.AddScoped<IIssueService, IssueService>();
+    builder.Services.AddScoped<IBusinessUnitService, BusinessUnitService>();
+    builder.Services.AddScoped<IDataProcessingActivityService, DataProcessingActivityService>();
+    builder.Services.AddScoped<IDataCategoryService, DataCategoryService>();
+    builder.Services.AddScoped<ISystem_Service, System_Service>();
+    builder.Services.AddScoped<IPrivacyNoticeService, PrivacyNoticeService>();
+    builder.Services.AddScoped<IDataSubjectRequestService, DataSubjectRequestService>();
+    builder.Services.AddScoped<IRecordsRepositoryService, RecordsRepositoryService>();
+    builder.Services.AddScoped<IRecord_Service, Record_Service>();
+    builder.Services.AddScoped<IRetentionScheduleService, RetentionScheduleService>();
+    builder.Services.AddScoped<IDispositionReviewService, DispositionReviewService>();
+    builder.Services.AddScoped<ILegalHoldService, LegalHoldService>();
+    builder.Services.AddScoped<IMatterService, MatterService>();
+    builder.Services.AddScoped<IThirdPartyService, ThirdPartyService>();
+    builder.Services.AddScoped<IThirdPartyAssessmentService, ThirdPartyAssessmentService>();
+    builder.Services.AddScoped<IContractService, ContractService>();
+    builder.Services.AddScoped<IException_Service, Exception_Service>();
+    builder.Services.AddScoped<IConsentService, ConsentService>();
+    builder.Services.AddScoped<IDataBreachService, DataBreachService>();
+
+// apply the service resolver
+builder.Services.AddScoped<IServiceResolver, ServiceResolver>();
+
+builder.Services.AddSingleton<ApplicationTelemetry>();
+
+builder.Services
+    .AddOpenTelemetry()
+    .WithMetrics(metrics =>
+    {
+        metrics.AddMeter("Harbormaster.Application");
+
+        metrics.AddPrometheusExporter();
+    });
 
 var app = builder.Build();
+
+app.MapPrometheusScrapingEndpoint();
+
 
 // Health endpoint
 app.MapHealthChecks("/health");
@@ -226,47 +243,47 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 
-app.MapOrganizationEndpoints();
-app.MapGovernanceBodyEndpoints();
-app.MapPersonEndpoints();
-app.MapRoleEndpoints();
-app.MapRoleAssignmentEndpoints();
-app.MapPolicyEndpoints();
-app.MapProcedureEndpoints();
-app.MapRegulationEndpoints();
-app.MapObligationEndpoints();
-app.MapControlEndpoints();
-app.MapControlTest_Endpoints();
-app.MapEvidenceEndpoints();
-app.MapRiskEndpoints();
-app.MapRiskAssessmentEndpoints();
-app.MapComplianceProgramEndpoints();
-app.MapComplianceRequirementEndpoints();
-app.MapAttestationEndpoints();
-app.MapAuditProgramEndpoints();
-app.MapAuditEngagementEndpoints();
-app.MapAuditWorkpaperEndpoints();
-app.MapAuditFindingEndpoints();
-app.MapCorrectiveActionEndpoints();
-app.MapIssueEndpoints();
-app.MapBusinessUnitEndpoints();
-app.MapDataProcessingActivityEndpoints();
-app.MapDataCategoryEndpoints();
-app.MapSystem_Endpoints();
-app.MapPrivacyNoticeEndpoints();
-app.MapDataSubjectRequestEndpoints();
-app.MapRecordsRepositoryEndpoints();
-app.MapRecord_Endpoints();
-app.MapRetentionScheduleEndpoints();
-app.MapDispositionReviewEndpoints();
-app.MapLegalHoldEndpoints();
-app.MapMatterEndpoints();
-app.MapThirdPartyEndpoints();
-app.MapThirdPartyAssessmentEndpoints();
-app.MapContractEndpoints();
-app.MapException_Endpoints();
-app.MapConsentEndpoints();
-app.MapDataBreachEndpoints();
+    app.MapOrganizationEndpoints();
+    app.MapGovernanceBodyEndpoints();
+    app.MapPersonEndpoints();
+    app.MapRoleEndpoints();
+    app.MapRoleAssignmentEndpoints();
+    app.MapPolicyEndpoints();
+    app.MapProcedureEndpoints();
+    app.MapRegulationEndpoints();
+    app.MapObligationEndpoints();
+    app.MapControlEndpoints();
+    app.MapControlTest_Endpoints();
+    app.MapEvidenceEndpoints();
+    app.MapRiskEndpoints();
+    app.MapRiskAssessmentEndpoints();
+    app.MapComplianceProgramEndpoints();
+    app.MapComplianceRequirementEndpoints();
+    app.MapAttestationEndpoints();
+    app.MapAuditProgramEndpoints();
+    app.MapAuditEngagementEndpoints();
+    app.MapAuditWorkpaperEndpoints();
+    app.MapAuditFindingEndpoints();
+    app.MapCorrectiveActionEndpoints();
+    app.MapIssueEndpoints();
+    app.MapBusinessUnitEndpoints();
+    app.MapDataProcessingActivityEndpoints();
+    app.MapDataCategoryEndpoints();
+    app.MapSystem_Endpoints();
+    app.MapPrivacyNoticeEndpoints();
+    app.MapDataSubjectRequestEndpoints();
+    app.MapRecordsRepositoryEndpoints();
+    app.MapRecord_Endpoints();
+    app.MapRetentionScheduleEndpoints();
+    app.MapDispositionReviewEndpoints();
+    app.MapLegalHoldEndpoints();
+    app.MapMatterEndpoints();
+    app.MapThirdPartyEndpoints();
+    app.MapThirdPartyAssessmentEndpoints();
+    app.MapContractEndpoints();
+    app.MapException_Endpoints();
+    app.MapConsentEndpoints();
+    app.MapDataBreachEndpoints();
 
 app.Run();
 
